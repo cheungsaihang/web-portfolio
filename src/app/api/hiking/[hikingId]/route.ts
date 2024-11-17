@@ -10,3 +10,5 @@ export async function GET(request: NextRequest, context: { params: Params } ) {
   const res = (data && API_hikingDetailSchema.safeParse(data).success) ? data : null;
   return NextResponse.json(res);
 }
+
+//Dynamic segment - Default is SSR. Todo: Setup Generating Static Params function to change to ISR.

@@ -23,3 +23,5 @@ export async function GET() {
   const res = await getHomeArticle();
   return NextResponse.json(res);
 }
+
+//Static segment - default is SSG

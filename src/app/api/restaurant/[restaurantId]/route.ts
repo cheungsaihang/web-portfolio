@@ -7,8 +7,7 @@ type Params = {
 }
 export async function GET(request: NextRequest, context: { params: Params } ) {
   const data = await getRestaurantDetail(context.params.restaurantId);
-
-API_restaurantDetailSchema.parse(data);
   const res = (data && API_restaurantDetailSchema.safeParse(data).success) ? data : null;
   return NextResponse.json(res);
 }
+//Dynamic segment - Default is SSR. Todo: Setup Generating Static Params function to change to ISR.

@@ -88,7 +88,6 @@ export default async function Home() {
 }
 
 async function getHomeArticle() {
-  //const res = await fetch(process.env.API_ENDPOINT  + '/api/home',{cache: 'force-cache'});
   const res = await fetch(process.env.API_ENDPOINT  + '/api/home',{ cache: 'no-store' });
   const article = await res.json() as FS_Article_Home;
   return article;
