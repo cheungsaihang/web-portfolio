@@ -33,6 +33,12 @@ declare module "@pigment-css/react/theme" {
         mainInner:string;
       }
     };
+    media:{
+      screenXS:string;
+      screenS:string;
+      screenM:string;
+      screenL:string;
+    };
   }
 
   interface ThemeArgs {

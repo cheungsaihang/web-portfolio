@@ -8,6 +8,7 @@ const pigmentConfig = {
         colors:{
           background:'#292929',
           foreground:'#ffffff',
+          breadcrumb:'#cccccc',
           journeySection:'#494949'
         }
       }
@@ -34,9 +35,10 @@ const pigmentConfig = {
       }
     },
     media:{
-      screenS:'600px',
-      screenM:'768px',
-      screenL:'1024px'
+      screenXS:'600px',
+      screenS:'900px',
+      screenM:'1024px',
+      screenL:'1200px'
     },
     getSelector: (colorScheme) => (colorScheme && colorScheme == 'dark') ? `.theme-${colorScheme}` : ':root',
   }),
@@ -50,12 +52,4 @@ export default pigmentConfig;
 // screenM:'768px',
 // screenL:'900px',
 // screenXL:'1024px',
-// screenXLL:'1200px',
-/*
-light:{
-  colors:{
-    background:'#a5a5c5',
-    foreground:'#333377',
-  }
-},
-*/
+// screenXLL:'1200px'

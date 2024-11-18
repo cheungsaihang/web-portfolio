@@ -31,7 +31,7 @@ const Grid:GridComponent = ({children}) => {
     gridColumnGap:'2%',
     marginTop:10,
     width:'100%',
-    [`@media (max-width: ${theme.media.screenM})`]:{
+    [`@media (max-width: ${theme.media.screenXS})`]:{
       gridTemplateColumns:'49% 49%',
     }
   }));

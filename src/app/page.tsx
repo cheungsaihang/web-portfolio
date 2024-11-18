@@ -22,7 +22,7 @@ const PrepareSection = styled('section')(({ theme }) => ({
   backgroundSize:'100%',
   marginLeft:`-${theme.sizes.spacing.mainInner}`,
   marginRight:`-${theme.sizes.spacing.mainInner}`,
-  [`@media (max-width: ${theme.media.screenM})`]:{
+  [`@media (max-width: ${theme.media.screenS})`]:{
     backgroundSize:'100% 100%',
     backgroundPositionY:'unset'
   },

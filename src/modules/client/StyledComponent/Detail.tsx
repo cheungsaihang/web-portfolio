@@ -9,7 +9,7 @@ export const ContentWrap = styled('div')(({theme}) => ({
   display:'flex',
   justifyContent:'stretch',
   marginBottom:'1rem',
-  [`@media (max-width: ${theme.media.screenL})`]:{
+  [`@media (max-width: ${theme.media.screenM})`]:{
     display:'block' 
   }
 }));
@@ -22,14 +22,14 @@ export const Title = styled('h1')(({theme}) => ({
 export const ReviewWrap = styled('div')(({theme}) => ({
   width:'100%',
   paddingRight:20,
-  [`@media (max-width: ${theme.media.screenL})`]:{
+  [`@media (max-width: ${theme.media.screenM})`]:{
     paddingRight:0 
   }
 }));
 
 export const Reviews = styled('p')(({theme}) => ({
   fontSize:'1.4rem',
-  marginTop:15,
+  marginTop:20,
   color:theme.vars.colors.foreground,
 }));
 

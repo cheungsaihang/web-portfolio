@@ -5,7 +5,7 @@ import * as Detail from "@/modules/client/StyledComponent/Detail";
 
 const cssImage = css(({theme}) => ({
   width:'50%',
-  [`@media (max-width: ${theme.media.screenM})`]:{
+  [`@media (max-width: ${theme.media.screenXS})`]:{
     width:'100%'
   }
 }));

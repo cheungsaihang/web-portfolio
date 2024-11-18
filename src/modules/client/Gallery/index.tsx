@@ -7,14 +7,14 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const LeftDiv = styled('div')({
   position:'fixed',
-  top:'50%',
+  top:'49%',
   left:5,
   zIndex:2003
 });
 
 const RightDiv = styled('div')({
   position:'fixed',
-  top:'50%',
+  top:'49%',
   right:5,
   zIndex:2003
 });
@@ -40,10 +40,10 @@ export default function Gallery({
 
   const onImageLoad = (e:any) => {
     const target = e.target as HTMLImageElement;
-    let style:CSSProperties = { display: 'block', maxWidth:'85vw' };
+    let style:CSSProperties = { display: 'block', maxWidth:'80vw' };
     if(target?.naturalWidth && target?.naturalHeight){
       if(target.naturalHeight > target.naturalWidth ){
-        style = { display: 'block', maxHeight:'85vh' };
+        style = { display: 'block', maxHeight:'80vh' };
       }
     }
     setImgStyle(style);
