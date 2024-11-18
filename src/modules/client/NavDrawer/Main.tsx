@@ -11,7 +11,7 @@ interface IMain extends FC<MainProps> {
   Body:StyledComponent;
 }
 
-const Container = styled('div')(({theme}) => ({
+const StyledContainer = styled('div')(({theme}) => ({
   width:'100%',
   marginLeft:200,
   backgroundColor:theme.vars.colors.background,
@@ -19,8 +19,7 @@ const Container = styled('div')(({theme}) => ({
     marginLeft:0,
   }
 }));
-
-const Header = styled('div')(({theme}) => ({
+const StyledHeader = styled('div')(({theme}) => ({
   display:'flex',
   justifyContent:'space-between',
   alignItems:'center',
@@ -34,12 +33,10 @@ const Header = styled('div')(({theme}) => ({
     borderBottomColor:theme.colors.layoutBorder,
     borderBottomStyle:'solid',
     borderBottomWidth:1,
-    boxShadow:'none',
     zIndex:1001
   }
 }));
-
-const Body = styled('main')(({theme}) => ({
+const StyledBody = styled('main')(({theme}) => ({
   padding:theme.sizes.spacing.mainInner,
   paddingTop:25,
   [`@media (max-width: ${theme.media.screenS})`]:{
@@ -47,7 +44,8 @@ const Body = styled('main')(({theme}) => ({
   }
 }));
 
-const Main = ({children,className}:MainProps) => ( <Container className={className}>{children}</Container>);
-Main.Header = Header;
-Main.Body = Body;
-export default Main satisfies IMain;
+const Main:IMain= ({children,className}) => <StyledContainer className={className}>{children}</StyledContainer>;
+Main.Header = StyledHeader;
+Main.Body = StyledBody;
+
+export default Main;

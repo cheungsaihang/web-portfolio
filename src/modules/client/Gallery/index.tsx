@@ -1,5 +1,5 @@
 "use client"
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useState, ReactEventHandler } from "react";
 import { styled, css } from "@pigment-css/react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -38,8 +38,8 @@ export default function Gallery({
   const [imgIndex, setImgIndex] = useState<number>(index);
   const picCount = pics.length;
 
-  const onImageLoad = (e:any) => {
-    const target = e.target as HTMLImageElement;
+  const onImageLoad:ReactEventHandler<HTMLImageElement> = (e) => {
+    const target = e.currentTarget;
     let style:CSSProperties = { display: 'block', maxWidth:'80vw' };
     if(target?.naturalWidth && target?.naturalHeight){
       if(target.naturalHeight > target.naturalWidth ){

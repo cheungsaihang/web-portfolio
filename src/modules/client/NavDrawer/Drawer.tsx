@@ -12,7 +12,7 @@ interface IDrawer extends FC<DrawerProps> {
   Item:StyledComponent;
 }
 
-const Nav = styled('nav')(({ theme }) => ({
+const StyledNav = styled('nav')(({ theme }) => ({
   position:'fixed',
   backgroundColor:theme.colors.menuBackground,
   width:200,
@@ -27,11 +27,9 @@ const Nav = styled('nav')(({ theme }) => ({
     zIndex:1002
   }
 }));
-
-const Drawer = ({children,className}:DrawerProps) => ( <Nav className={className}>{children}</Nav>);
-Drawer.Header = styled('div')({margin:".5rem"});
-Drawer.List = styled('ul')({});
-Drawer.Item = styled('li')(({theme}) => ({
+const StyledHeader = styled('div')({margin:".5rem"});
+const StyledList = styled('ul')({});
+const StyledItem = styled('li')(({theme}) => ({
   ['a']: {
     display:'block',
     color:theme.vars.colors.drawerLink,
@@ -44,4 +42,9 @@ Drawer.Item = styled('li')(({theme}) => ({
   }
 }));
 
-export default Drawer satisfies IDrawer;
+const Drawer:IDrawer = ({children,className}) => <StyledNav className={className}>{children}</StyledNav>;
+Drawer.Header = StyledHeader;
+Drawer.List = StyledList;
+Drawer.Item = StyledItem;
+
+export default Drawer;
