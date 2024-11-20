@@ -55,7 +55,7 @@ export async function getRestaurantDetail(docId:string){
     reviews: reviews,
     location: data?.location,
     rate: data?.rate,
-    tag: data?.tag
+    tags: data?.tags
   }
 }
 

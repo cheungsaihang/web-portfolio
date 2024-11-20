@@ -9,7 +9,7 @@ export const FS_restaurantSchema = z.object({
     order:z.number()
   })),
   location:z.string().optional(),
-  tag:z.string().optional(),
+  tags:z.array(z.string()),  
   rate:z.number()
 });
 

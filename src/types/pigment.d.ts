@@ -23,6 +23,8 @@ declare module "@pigment-css/react/theme" {
       skeleton:string;
       journeySection:string;
       drawerLink:string;
+      tagText:string;
+      rate:string;
     };
     sizes:{
       fonts:{

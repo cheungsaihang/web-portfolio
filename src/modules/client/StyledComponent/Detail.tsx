@@ -1,16 +1,34 @@
 import { styled } from '@pigment-css/react';
 
-export const Container = styled('div')({
+export const Container = styled('article')({
+  display:'block',
   marginTop:'1rem'
 });
 
-export const ContentWrap = styled('div')(({theme}) => ({
+export const Flex = styled('div')(({theme}) => ({
   width:'100%',
   display:'flex',
-  justifyContent:'stretch',
+  justifyContent:'space-between',
   marginBottom:'1rem',
   [`@media (max-width: ${theme.media.screenM})`]:{
     display:'block' 
+  }
+}));
+
+export const FlexMain = styled('div')(({theme}) => ({
+  width:'calc(100% - 322px)',
+  paddingRight:20,
+  [`@media (max-width: ${theme.media.screenM})`]:{
+    width:'100%',
+    paddingRight:0 
+  }
+}));
+
+export const FlexSide = styled('div')(({theme}) => ({
+  width:302,
+  [`@media (max-width: ${theme.media.screenS})`]:{
+    width:'100%',
+    marginTop:20,
   }
 }));
 
@@ -19,15 +37,7 @@ export const Title = styled('h1')(({theme}) => ({
   color:theme.vars.colors.foreground,
 }));
 
-export const ReviewWrap = styled('div')(({theme}) => ({
-  width:'100%',
-  paddingRight:20,
-  [`@media (max-width: ${theme.media.screenM})`]:{
-    paddingRight:0 
-  }
-}));
-
-export const Reviews = styled('p')(({theme}) => ({
+export const Review = styled('p')(({theme}) => ({
   fontSize:'1.4rem',
   marginTop:20,
   color:theme.vars.colors.foreground,
@@ -36,7 +46,7 @@ export const Reviews = styled('p')(({theme}) => ({
 export const PictureGrid = styled('div')({
   display:'grid',
   gridTemplateColumns:'auto auto',
-  margin:'0px -1px',
+  gridColumnGap:2,
   width:302,
 });
 
@@ -44,7 +54,7 @@ export const PictureWrap = styled('div')({
   width:150,
   height:150,
   position:'relative',
-  margin:1
+  marginTop:2
 });
 
 export const PictureShadowMore = styled('div')({
@@ -61,3 +71,24 @@ export const PictureShadowMore = styled('div')({
   color:'#FAFAFA',
   fontSize:'2rem'
 });
+
+export const InfoText = styled('p')(({theme}) => ({
+  fontSize:'1.4rem',
+  color:theme.vars.colors.foreground,
+  fontWeight:'bolder'
+}));
+
+export const SubInfoWrap = styled('div')({
+  marginTop:10,
+});
+
+export const Tag = styled('span')(({theme}) => ({
+  display:'inline-block',
+  padding:'4px 15px',
+  borderRadius:15,
+  backgroundColor:theme.colors.skeleton,
+  color:theme.colors.foreground,
+  marginRight:3,
+  marginBottom:3,
+  fontSize:'1.3rem'
+}));

@@ -23,7 +23,9 @@ const pigmentConfig = {
       breadcrumbText:'#555555',
       skeleton:'#eeeeee',
       journeySection:'#f1f1f1',
-      drawerLink:'#cccccc'
+      drawerLink:'#cccccc',
+      tagText:'#33333',
+      rate:'#fbb117',
     },
     sizes:{
       fonts:{
