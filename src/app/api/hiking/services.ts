@@ -36,6 +36,8 @@ export async function getHikingDetail(docId:string){
     name:data?.name,
     reviews:data?.reviews,
     map:data?.map,
+    difficult: data?.difficult,
+    tags:data?.tags,
     pics: !data?.pics ? undefined : await Promise.all(data.pics.map(async (pic) =>  await downLoadDocImage(id,pic)))
   }
 }

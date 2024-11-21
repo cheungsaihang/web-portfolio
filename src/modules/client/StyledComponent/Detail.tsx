@@ -16,8 +16,8 @@ export const Flex = styled('div')(({theme}) => ({
 }));
 
 export const FlexMain = styled('div')(({theme}) => ({
-  width:'calc(100% - 322px)',
-  paddingRight:20,
+  width:'calc(100% - 332px)',
+  paddingRight:30,
   [`@media (max-width: ${theme.media.screenM})`]:{
     width:'100%',
     paddingRight:0 
@@ -91,4 +91,12 @@ export const Tag = styled('span')(({theme}) => ({
   marginRight:3,
   marginBottom:3,
   fontSize:'1.3rem'
+}));
+
+export const DifficultText = styled('div')(({theme}) => ({
+  display:'flex',
+  alignItems:'center',
+  fontSize:'1.3rem',
+  color:theme.vars.colors.foreground,
+  paddingLeft:1
 }));

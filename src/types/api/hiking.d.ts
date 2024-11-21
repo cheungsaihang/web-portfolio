@@ -5,7 +5,9 @@ export const FS_hikingSchema = z.object({
   name:z.string(),
   reviews:z.array(z.string()),
   pics:z.array(z.string()),
-  map:z.string().optional()
+  map:z.string().optional(),
+  difficult:z.number(),
+  tags:z.array(z.string())
 });
 
 //Api Response Schema
