@@ -48,5 +48,6 @@ declare module "@pigment-css/react/theme" {
       colorScheme: "light" | "dark";
       tokens: ThemeTokens;
     }>;
+    [variant:string]: boolean | string | number | undefined;
   }
 }

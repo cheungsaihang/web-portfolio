@@ -1,6 +1,6 @@
 "use client"
 import { ReactNode, useState } from "react";
-import { css, styled } from "@pigment-css/react";
+import { styled } from "@pigment-css/react";
 import Drawer from "./Drawer";
 import Main from "./Main";
 import ThemeSwitcher from '@/modules/client/ThemeSwitcher';
@@ -12,7 +12,9 @@ const Layout = styled('div')(({theme})=> ({
   alignItems:'stretch',
   minHeight:'100vh',
   paddingBottom: 20,
-  backgroundColor: theme.vars.colors.background
+  backgroundColor: theme.vars.colors.background,
+  margin:'0px auto',
+  maxWidth:1920
 }));
 
 const LogoContainer = styled('div')({
@@ -23,15 +25,11 @@ const LogoContainer = styled('div')({
   position:'relative'
 });
 
-const classOpen = css({
-  left:0,
-});
-
 export default function NavRrawer({ children }:{ children:ReactNode}){
   const [isMenuOpen, setMenuOpen] = useState(false);
   return (
     <Layout>
-      <Drawer className={isMenuOpen ? classOpen : undefined}>
+      <Drawer open={isMenuOpen}>
         <Drawer.Header />
         <Drawer.List>
           <Drawer.Item><a href="/">主頁</a></Drawer.Item>

@@ -3,7 +3,7 @@ import { styled, StyledComponent} from "@pigment-css/react";
 
 type DrawerProps = {
   children:ReactNode;
-  className?:string;
+  open?:boolean;
 }
 
 interface IDrawer extends FC<DrawerProps> {
@@ -22,7 +22,7 @@ const StyledNav = styled('nav')(({ theme }) => ({
     position:'fixed',
     top:51,
     width:'100%',
-    left:'-100%',
+    left: ({open}:{open?:boolean}) => (open ? 0 : '-100%'),
     transition:'left .15s linear',
     zIndex:1002
   }
@@ -42,7 +42,7 @@ const StyledItem = styled('li')(({theme}) => ({
   }
 }));
 
-const Drawer:IDrawer = ({children,className}) => <StyledNav className={className}>{children}</StyledNav>;
+const Drawer:IDrawer = ({children,open}) => <StyledNav open={open}>{children}</StyledNav>;
 Drawer.Header = StyledHeader;
 Drawer.List = StyledList;
 Drawer.Item = StyledItem;
