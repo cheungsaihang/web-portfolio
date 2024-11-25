@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
-import { getFSDocById } from "@/utils/firebase/services/db"; 
+import FirebaseApp from "@/modules/server/firebase/app";
+import { getFSDocById } from "@/modules/server/firebase/services/db";
 import { isApiSuccess } from "@/utils/api";
 import { FS_Article_Home } from "@/types/api/home";
 
+const firebaseApp = FirebaseApp.getApp();
+
 async function getHomeArticle(){
   // Fetch data from firestore
-  const res = await getFSDocById('article','home');
+  const res = await getFSDocById(firebaseApp)('article','home');
   if(!isApiSuccess(res)){
     return null;
   }

@@ -1,11 +1,8 @@
-import { getStorage, getDownloadURL, ref } from 'firebase/storage';
-import MyFirebaseApp from '../app.class';
+import { getDownloadURL, ref, getStorage } from 'firebase/storage';
 import { apiHandler, isApiSuccess } from '@/utils/api';
+import { FirebaseApp } from 'firebase/app';
 
-const app = MyFirebaseApp.getApp();
-const storage = getStorage(app);
-
-type ArgImageUrls = {
+type ArgImageUrl = {
   docType:string;
   docId:string;
   docPic:string;
@@ -14,7 +11,8 @@ type ArgImageUrls = {
 export type StorageData = string;
 export type StorageError = unknown;
 
-export async function getImageUrl(arg:ArgImageUrls){
+export const getImageUrl = (app:FirebaseApp) => async (arg:ArgImageUrl) => {
+  const storage = getStorage(app);
   const { docType, docId, docPic } = arg;
   const path = `/images/${docType}/${docId}/${docPic}`;
   const res =  await apiHandler<StorageError,StorageData>(getDownloadURL,ref(storage, path));

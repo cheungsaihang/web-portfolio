@@ -1,5 +1,4 @@
 import { 
-  getFirestore, 
   collection, 
   QuerySnapshot, 
   DocumentData, 
@@ -8,14 +7,11 @@ import {
   getDocs,
   getDoc,
   doc, 
-  DocumentSnapshot
+  DocumentSnapshot,
+  getFirestore
 } from 'firebase/firestore';
+import { FirebaseApp } from 'firebase/app';
 import { apiHandler } from '@/utils/api';
-import MyFirebaseApp from '../app.class';
-
-//Configs and Types
-const app = MyFirebaseApp.getApp();
-const db = getFirestore(app);
 
 type DocData = DocumentSnapshot<DocumentData,DocumentData>
 type QueryData = QuerySnapshot<unknown,DocumentData>;
@@ -28,12 +24,21 @@ export interface DocConverter<T extends object>{
 };
 
 //Functions
-export const getFSDocs = async <C extends object>(collectionId:string, converter?:DocConverter<C>) => {
+export const getFSDocs = (app:FirebaseApp) => async<C extends object>(
+  collectionId:string, 
+  converter?:DocConverter<C>
+) => {
+  const db = getFirestore(app);
   const ref = converter ? collection(db,collectionId).withConverter(converter) : collection(db,collectionId);
   return await apiHandler<QueryError,QueryData>(getDocs,ref);
 };
 
-export const getFSDocById = async <C extends object>(collectionId:string, docId:string, converter?:DocConverter<C>) => {
+export const getFSDocById = (app:FirebaseApp) => async<C extends object>(
+  collectionId:string, 
+  docId:string, 
+  converter?:DocConverter<C>
+) => {
+  const db = getFirestore(app);
   const ref = converter ? doc(db,collectionId,docId).withConverter(converter) : doc(db,collectionId,docId);
   return await apiHandler<QueryError,DocData>(getDoc,ref);
 };
