@@ -1,12 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getRestaurantDetail } from "../services";
-import { API_restaurantDetailSchema } from "@/types/api/restaurant.d";
+import { API_restaurantDetailSchema } from "@/types/api/restaurant";
 
 type Params = {
   restaurantId: string
 }
-export async function GET(request: NextRequest, context: { params: Params } ) {
-  const data = await getRestaurantDetail(context.params.restaurantId);
+export async function GET(request: NextRequest, context: { params: Promise<Params> } ) {
+  const { restaurantId } = await context.params;
+  const data = await getRestaurantDetail(restaurantId);
   const res = (data && API_restaurantDetailSchema.safeParse(data).success) ? data : null;
   return NextResponse.json(res);
 }

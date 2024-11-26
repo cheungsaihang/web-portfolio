@@ -1,4 +1,4 @@
-import { API_RestaurantDetail } from "@/types/api/restaurant.d";
+import { API_RestaurantDetail } from "@/types/api/restaurant";
 import Content from "./content";
 
 async function getRestaurantDetail(docId:string):Promise<API_RestaurantDetail>{
@@ -8,8 +8,9 @@ async function getRestaurantDetail(docId:string):Promise<API_RestaurantDetail>{
   return await res.json();
 }
 
-export default async function Page({ params }: { params: { restaurantId: string } }) {
-  const detail = await getRestaurantDetail(params.restaurantId);
+export default async function Page({ params }: { params: Promise<{ restaurantId: string }> }) {
+  const { restaurantId } = await params;
+  const detail = await getRestaurantDetail(restaurantId);
   
   return (
     <div>

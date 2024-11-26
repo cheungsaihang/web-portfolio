@@ -8,8 +8,9 @@ async function getHikingDetail(docId:string):Promise<API_HikingDetail>{
   return await res.json();
 }
 
-export default async function Page({ params }: { params: { hikingId: string } }) {
-  const detail = await getHikingDetail(params.hikingId);
+export default async function Page({ params }: { params: Promise<{ hikingId: string }> }) {
+  const { hikingId } = await params;
+  const detail = await getHikingDetail(hikingId);
 
   return (
     <>

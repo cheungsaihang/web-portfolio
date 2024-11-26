@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getRestaurantList } from "./services";
-import { API_restaurantListSchema } from "@/types/api/restaurant.d";
+import { API_restaurantListSchema } from "@/types/api/restaurant";
 
 export async function GET() {
   const data = await getRestaurantList();

@@ -1,5 +1,5 @@
 import { isApiSuccess } from "@/utils/api";
-import { FS_Restaurant } from "@/types/api/restaurant.d";
+import { FS_Restaurant } from "@/types/api/restaurant";
 import FirebaseApp from "@/modules/server/firebase/app";
 import { getFSDocs, getFSDocById } from "@/modules/server/firebase/services/db";
 import { getImageUrl } from "@/modules/server/firebase/services/storage";

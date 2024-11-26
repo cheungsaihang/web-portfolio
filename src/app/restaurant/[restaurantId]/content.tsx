@@ -1,6 +1,6 @@
 "use client"
 import { css } from "@pigment-css/react";
-import { API_RestaurantDetail } from "@/types/api/restaurant.d";
+import { API_RestaurantDetail } from "@/types/api/restaurant";
 import * as D from "@/modules/client/StyledComponent/Detail";
 import DuplicateComponent from "@/modules/client/DuplicateComponent";
 import Image from "next/image";
