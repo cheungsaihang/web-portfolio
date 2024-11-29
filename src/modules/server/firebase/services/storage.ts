@@ -2,7 +2,7 @@ import { getDownloadURL, ref, getStorage } from 'firebase/storage';
 import { apiHandler, isApiSuccess } from '@/utils/api';
 import { FirebaseApp } from 'firebase/app';
 
-type ArgImageUrl = {
+export type ArgImageUrl = {
   docType:string;
   docId:string;
   docPic:string;

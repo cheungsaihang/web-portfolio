@@ -13,12 +13,12 @@ export default async function Page({ params }: { params: Promise<{ restaurantId:
   const detail = await getRestaurantDetail(restaurantId);
   
   return (
-    <div>
+    <>
         {
         !detail 
         ? <div>Page not Found</div> 
         : <Content detail={detail} />
         }
-    </div>
+    </>
   );
 }

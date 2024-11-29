@@ -7,11 +7,20 @@ async function getHikingList(){
   return await res.json();
 }
 
+async function getTags(){
+  const res = await fetch(process.env.API_ENDPOINT  + '/api/tags/hiking',{ cache: 'no-store' });
+  const data = await res.json() as string[];
+  const tags = ['全部',...data];
+  return tags;
+}
+
 export default async function Page() {
-  const list = await getHikingList();
+  const resultSet = await getHikingList();
+  const tags = await getTags();
+
   return (
     <>
-      { list ? <HikingListing type={'hiking'} list={list}/> : <div>No Data</div>}
+      { resultSet ? <HikingListing type={'hiking'} tags={tags} resultSet={resultSet}/> : <div>No Data</div>}
     </>
   );
 }

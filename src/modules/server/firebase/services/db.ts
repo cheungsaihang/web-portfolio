@@ -8,14 +8,19 @@ import {
   getDoc,
   doc, 
   DocumentSnapshot,
-  getFirestore
+  getFirestore,
+  query,
+  where,
+  Query,
+  QueryFieldFilterConstraint
 } from 'firebase/firestore';
 import { FirebaseApp } from 'firebase/app';
 import { apiHandler } from '@/utils/api';
 
-type DocData = DocumentSnapshot<DocumentData,DocumentData>
-type QueryData = QuerySnapshot<unknown,DocumentData>;
-type QueryError = unknown;
+export type DocResponse = DocumentSnapshot<DocumentData,DocumentData>;
+export type QueryRequest = Query<DocumentData, DocumentData>;
+export type QueryResponse = QuerySnapshot<unknown,DocumentData>;
+export type FSError = unknown;
 
 //Interfaces
 export interface DocConverter<T extends object>{
@@ -23,14 +28,29 @@ export interface DocConverter<T extends object>{
   fromFirestore:(snapshot: QueryDocumentSnapshot,options: SnapshotOptions) => T 
 };
 
+type FSWhere = {
+  [key:string]:(field:string, keyword:string) => QueryFieldFilterConstraint
+}
+
+export const fsWhere:FSWhere = {
+  inArray: (field, keyword) => where(field ,'array-contains',keyword)
+}
+
+export const getFSQuery = (app:FirebaseApp) => (collectionId:string, filter?:QueryFieldFilterConstraint) => {
+  const db = getFirestore(app);
+  const ref = collection(db,collectionId);
+  if(!filter){
+    return ref;
+  }
+  return query(ref, filter);
+}
+
 //Functions
-export const getFSDocs = (app:FirebaseApp) => async<C extends object>(
-  collectionId:string, 
+export const getFSDocs = (q:QueryRequest) =>  async<C extends object>(
   converter?:DocConverter<C>
 ) => {
-  const db = getFirestore(app);
-  const ref = converter ? collection(db,collectionId).withConverter(converter) : collection(db,collectionId);
-  return await apiHandler<QueryError,QueryData>(getDocs,ref);
+  const ref = converter ? q.withConverter(converter) : q;
+  return await apiHandler<FSError,QueryResponse>(getDocs,ref);
 };
 
 export const getFSDocById = (app:FirebaseApp) => async<C extends object>(
@@ -40,5 +60,5 @@ export const getFSDocById = (app:FirebaseApp) => async<C extends object>(
 ) => {
   const db = getFirestore(app);
   const ref = converter ? doc(db,collectionId,docId).withConverter(converter) : doc(db,collectionId,docId);
-  return await apiHandler<QueryError,DocData>(getDoc,ref);
+  return await apiHandler<FSError,DocResponse>(getDoc,ref);
 };

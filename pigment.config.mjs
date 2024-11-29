@@ -9,7 +9,10 @@ const pigmentConfig = {
           background:'#292929',
           foreground:'#ffffff',
           breadcrumb:'#cccccc',
-          journeySection:'#494949'
+          journeySection:'#494949',
+          menuTag:'#666666',
+          menuTagHover:'#999999',
+          menuTagActive:'#ffffff'
         }
       }
     },
@@ -26,6 +29,9 @@ const pigmentConfig = {
       drawerLink:'#cccccc',
       tagText:'#33333',
       rate:'#fbb117',
+      menuTag:'#eeeeee',
+      menuTagHover:'#dddddd',
+      menuTagActive:'#111111'
     },
     sizes:{
       fonts:{

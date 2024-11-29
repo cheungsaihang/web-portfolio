@@ -9,6 +9,7 @@ declare module "@pigment-css/react/theme" {
           background:string;
           foreground:string;
           journeySection:string;
+          menuTagActive:string;
         }
       };
     };
@@ -25,6 +26,9 @@ declare module "@pigment-css/react/theme" {
       drawerLink:string;
       tagText:string;
       rate:string;
+      menuTag:string;
+      menuTagHover:string;
+      menuTagActive:string;
     };
     sizes:{
       fonts:{
