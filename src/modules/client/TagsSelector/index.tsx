@@ -3,8 +3,13 @@ import { ReactNode, FC } from "react";
 
 export const StyledWrap = styled('div')({
   width:'100%',
+  whiteSpace:'nowrap',
   overflowX:'scroll',
-  scrollbarWidth:'none'
+  scrollbarWidth:'none',
+  msOverflowStyle:'none',
+  ["&::-webkit-scrollbar"]:{
+    display: 'none'
+  }
 });
 
 export const StyledTag = styled('a')(({theme}) => ({

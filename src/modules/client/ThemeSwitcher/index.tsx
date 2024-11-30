@@ -14,7 +14,12 @@ type Theme = 'dark' | 'light';
 export default function ThemeSwitcher(){
   const [theme, setTheme] = usePersistState<Theme>('theme','light');
   const switchTheme = (theme:Theme) => {
-    document.documentElement.className = `theme-${theme}`;
+    if(theme == 'dark'){
+      document.documentElement.classList.add('theme-dark');
+    }
+    else{
+      document.documentElement.classList.remove('theme-dark');
+    }
     setTheme(theme);
   }
   return (
