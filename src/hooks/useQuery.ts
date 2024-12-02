@@ -1,24 +1,20 @@
-import { Dispatch, useState, SetStateAction } from "react";
+import { useState } from "react";
 
-export default function useQuery<T>(dispatch:Dispatch<SetStateAction<T>>){
+export default function useQuery(){
   const [isPending, setPending] = useState(false);
-  const [error, setError] = useState(null); 
 
-  const query = (url:string, options?:RequestInit) => {
+  const query = async (url:string, options?:RequestInit) => {
     setPending(true);
-    setError(null);
-    fetch(
+    return await fetch(
       url,
       options
-    ).then((res) => (
-      res.json()
-    )).then((data) => {
-      dispatch(data);
+    ).then((res) => {
+      return res.json()
     }).catch((e) => {
-      setError(e);
+      throw new Error(e);
     }).finally(() => {
-      setPending(false)
+      setPending(false);
     });
   }
-  return [isPending, query, error] as const;
+  return [isPending, query] as const;
 }

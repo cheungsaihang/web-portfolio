@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 import { WEBSITE_NAME } from "@/constants";
 import RestaurantListing from "./content";
+import { SearchParams } from "@/types"
+import { API_HikingList } from "@/types/api/hiking";
 
-async function getRestaurantList(){
-  // Fetch data from firestore
-  //const res = await fetch(process.env.API_ENDPOINT  + '/api/restaurant',{ next: { revalidate: 300 } });
-  const res = await fetch(process.env.API_ENDPOINT  + '/api/restaurant',{ cache: 'no-store' });
-  return await res.json();
+type Response = {
+  records:API_HikingList[] | null;
+  tags:string[];
 }
-async function getTags(){
-  const res = await fetch(process.env.API_ENDPOINT  + '/api/tags/restaurant',{ cache: 'no-store' });
-  const data = await res.json() as string[];
-  const tags = ['全部',...data];
-  return tags;
+
+async function getRestaurantList(searchParams:SearchParams){
+  const search = searchParams.tags ? `?tags=${searchParams.tags}` : '';
+  const res = await fetch(`${process.env.API_ENDPOINT}/api/restaurant${search}` ,{ cache: 'no-store' });
+  return await res.json() as Response;
 }
 
 export const metadata: Metadata = {
@@ -20,13 +20,9 @@ export const metadata: Metadata = {
   description: "分享日式，韓式，泰式等多種唔同餐廳食評及用餐體驗。",
 }
 
-export default async function Page() {
-  const list = await getRestaurantList();
-  const tags = await getTags();
+export default async function Page({searchParams}:{searchParams:Promise<SearchParams>}) {
+  const params = await searchParams;
+  const {records, tags} = await getRestaurantList(params);
 
-  return (
-    <div>
-        {list ? <RestaurantListing type={'restaurant'} tags={tags} resultSet={list}/> : <div>No Data</div>}
-    </div>
-  );
+  return ( <RestaurantListing tags={tags} records={records}/> );
 }

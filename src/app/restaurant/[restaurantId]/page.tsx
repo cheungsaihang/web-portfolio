@@ -26,6 +26,8 @@ export default async function Page({ params }: { params: Promise<{ restaurantId:
   //SSR page
   const { restaurantId } = await params;
   const detail = await getRestaurantDetail(restaurantId);
+
+  console.log('Detail');
   
   return (
     <>
