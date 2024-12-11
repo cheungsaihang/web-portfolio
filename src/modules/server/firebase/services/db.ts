@@ -12,7 +12,10 @@ import {
   query,
   where,
   Query,
-  QueryFieldFilterConstraint
+  QueryFieldFilterConstraint,
+  orderBy,
+  limit,
+  startAt
 } from 'firebase/firestore';
 import { FirebaseApp } from 'firebase/app';
 import { apiHandler } from '@/utils/api';
@@ -32,17 +35,40 @@ type FSWhere = {
   [key:string]:(field:string, keyword:string) => QueryFieldFilterConstraint
 }
 
+export type FsOrder = [
+  string, 'asc' | 'desc'
+][] | string[];
+
 export const fsWhere:FSWhere = {
   inArray: (field, keyword) => where(field ,'array-contains',keyword)
 }
 
-export const getFSQuery = (app:FirebaseApp) => (collectionId:string, filter?:QueryFieldFilterConstraint) => {
+export const getFSQuery = (app:FirebaseApp) => 
+  (
+    collectionId:string,
+    condition:{
+      where?:QueryFieldFilterConstraint, 
+      order?:FsOrder,
+      offset:number,
+      limit:number
+    } 
+  ) => {
   const db = getFirestore(app);
   const ref = collection(db,collectionId);
-  if(!filter){
+  
+  const orderFns = !condition?.order ? [] : condition.order.map((item => {
+    if(typeof item === 'string'){
+      return orderBy(item);
+    }
+    return orderBy(...item);
+  }));
+
+  const conditions = [condition.where, ...orderFns, startAt(condition.offset), limit(condition.limit)].filter(c => (c !== undefined));
+
+  if(!conditions.length){
     return ref;
   }
-  return query(ref, filter);
+  return query(ref,...conditions);
 }
 
 //Functions

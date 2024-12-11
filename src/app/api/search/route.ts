@@ -7,7 +7,7 @@ export async function GET(request:NextRequest) {
   const [collectionId, tags] = getAllParams(request)('cid','tags');
 
   if(collectionId && isValidCollection(collectionId)){
-    const queryfn = prepareQuery(collectionId, {tags:tags} );
+    const queryfn = prepareQuery(collectionId, { search: { tags:tags } });
     const result = await queryfn();
     if(result){
       const handler = collectionId == 'restaurant' ? handleRestaurantList : handleHikingList;

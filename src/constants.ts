@@ -1,1 +1,0 @@
-export const WEBSITE_NAME = "Hang's Blog";

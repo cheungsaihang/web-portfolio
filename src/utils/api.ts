@@ -27,6 +27,7 @@ export const apiHandler = async <E,D>(callApi:ApiFunction, a:ApiParameter):Promi
   const res = await callApi(a).then((data) => {
       return apiSuccess(data);
     }).catch((error) => {
+      console.error(error);
       return apiFail(error);
     });
   return Promise.resolve(res);
