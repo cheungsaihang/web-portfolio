@@ -6,7 +6,10 @@ import DuplicateComponent from "@/modules/client/DuplicateComponent";
 import Image from "next/image";
 
 const cssImage = css(({theme}) => ({
-  width:'60%',
+  width:'100%',
+  maxWidth:480,
+  marginTop:5,
+  borderRadius:5,
   [`@media (max-width: ${theme.media.screenXS})`]:{
     width:'100%'
   }
