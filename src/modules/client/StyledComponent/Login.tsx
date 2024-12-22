@@ -33,7 +33,10 @@ export const Label = styled('label')(({theme}) => ({
 }));
 
 export const Input = styled('div')({
-  padding:3,
+  display:'flex',
+  justifyContent:'center',
+  paddingTop:3,
+  paddingBottom:3,
   borderWidth:1,
   borderColor:'#cccccc',
   borderStyle:'solid',

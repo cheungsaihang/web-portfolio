@@ -30,6 +30,8 @@ globalCss`
   }
   input {
     outline:none;
+    padding:0;
+    border-radius:0;
   }
   input:focus {
     outline:none !important;

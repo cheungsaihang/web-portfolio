@@ -5,11 +5,13 @@ import { useFormStatus } from "react-dom";
 import { login } from "./actions";
 import * as L from "@/modules/client/StyledComponent/Login";
 
-const cssInput = css({
+const cssInput = css(({theme}) =>({
   fontSize:'1.5rem',
   borderWidth:0,
-  width:'calc(100% - 6px)'
-});
+  width:'calc(100% - 6px)',
+  backgroundColor:theme.vars.colors.background,
+  color:theme.vars.colors.foreground
+}));
 
 export default function Page() {
   const [state, loginAction] = useActionState(login,undefined);

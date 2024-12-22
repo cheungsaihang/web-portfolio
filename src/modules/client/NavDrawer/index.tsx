@@ -7,7 +7,6 @@ import ThemeSwitcher from '@/modules/client/ThemeSwitcher';
 import MenuSwitcher from './MenuSwitcher';
 import Image from "next/image";
 import AccountIcon from "./AccountIcon";
-import Link from "next/link";
 
 const Layout = styled('div')(({theme})=> ({
   display:'flex',
@@ -40,9 +39,9 @@ export default function NavRrawer({ children }:{ children:ReactNode}){
       <Drawer open={isMenuOpen}>
         <Drawer.Header />
         <Drawer.List>
-          <Drawer.Item><Link href="/">主頁</Link></Drawer.Item>
-          <Drawer.Item><Link href="/restaurant">餐廳</Link></Drawer.Item>
-          <Drawer.Item><Link href="/hiking">行山</Link></Drawer.Item>
+          <Drawer.Item><a href="/">主頁</a></Drawer.Item>
+          <Drawer.Item><a href="/restaurant">餐廳</a></Drawer.Item>
+          <Drawer.Item><a href="/hiking">行山</a></Drawer.Item>
         </Drawer.List>
       </Drawer>
       <Main>
