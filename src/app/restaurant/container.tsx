@@ -6,7 +6,8 @@ import { ScrollContextProvider } from "./useContext";
 import useQuery from '@/hooks/useQuery';
 import Loading from "./_loading";
 import { API_RestaurantList } from "@/types/api/restaurant";
-import { API_ListResponse } from "@/types/api";
+import { API_Error, API_ListResponse, API_Success } from "@/types/api";
+import { isErrorResponse } from "@/utils/nextResponse";
 
 export default function Container({res,children}:{res:API_ListResponse<API_RestaurantList>;children:ReactNode}) {
   const [isPending, query] = useQuery();
@@ -19,13 +20,16 @@ export default function Container({res,children}:{res:API_ListResponse<API_Resta
   const tags = res.tags;
   const onClickTag = (key:number) => {
     const apiUrl = `${API_URL.restaurant}${key ? `?tags=${tags[key]}` : '' }`;
-    query(apiUrl, { next :{ revalidate:900 } }).then((data:API_ListResponse<API_RestaurantList>) => {
-      if(data){
-        resetResponse({
-          list: data.records,
-          isMorePage: data.pagination.isMorePage,
-          apiUrl:apiUrl
-        });
+    query(apiUrl, { next :{ revalidate:900 } }).then((res:API_Success<API_ListResponse<API_RestaurantList>> | API_Error) => {
+      if(!isErrorResponse(res)){
+        const data = res.result;
+        if(data){
+          resetResponse({
+            list: data.records,
+            isMorePage: data.pagination.isMorePage,
+            apiUrl:apiUrl
+          });
+        }
       }
     });
   }

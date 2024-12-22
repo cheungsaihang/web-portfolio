@@ -5,8 +5,7 @@ import usePersistState from '@/hooks/usePersistState';
 
 const cssIcon = css(({theme}) =>({
   fontSize:`${theme.sizes.fonts.icon} !important`,
-  color: theme.colors.icon,
-  marginRight:5
+  color: theme.colors.icon
 }));
 
 type Theme = 'dark' | 'light';

@@ -31,7 +31,10 @@ const pigmentConfig = {
       rate:'#fbb117',
       menuTag:'#eeeeee',
       menuTagHover:'#dddddd',
-      menuTagActive:'#111111'
+      menuTagActive:'#111111',
+      button:'#00a86b',
+      buttonBlur:'#66d89b',
+      errorText:'#ff0000'
     },
     sizes:{
       fonts:{

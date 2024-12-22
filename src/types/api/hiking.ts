@@ -1,26 +1,16 @@
 import { z } from "zod";
-
-//Firestore Schema
-export const FS_hikingSchema = z.object({
-  name:z.string(),
-  reviews:z.array(z.string()),
-  pics:z.array(z.string()),
-  map:z.string().optional(),
-  difficult:z.number(),
-  tags:z.array(z.string())
-});
+import { Zod_FS_hikingSchema } from "@/modules/server/firebase/schemas/hiking.schema";
 
 //Api Response Schema
-export const API_hikingDetailSchema = FS_hikingSchema.extend({
+export const Zod_API_hikingDetailSchema = Zod_FS_hikingSchema.extend({
   id:z.string()
 });
-export const API_hikingListSchema = API_hikingDetailSchema.pick({
+export const Zod_API_hikingListSchema = Zod_API_hikingDetailSchema.pick({
   id:true,
   name:true
 }).extend({
   pic:z.string()
 });
 
-export type FS_Hiking = z.infer<typeof FS_hikingSchema>;
-export type API_HikingDetail = z.infer<typeof API_hikingDetailSchema>;
-export type API_HikingList = z.infer<typeof API_hikingListSchema>;
+export type API_HikingDetail = z.infer<typeof Zod_API_hikingDetailSchema>;
+export type API_HikingList = z.infer<typeof Zod_API_hikingListSchema>;

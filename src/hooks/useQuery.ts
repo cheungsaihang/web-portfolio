@@ -9,7 +9,7 @@ export default function useQuery(){
       url,
       options
     ).then((res) => {
-      return res.json()
+      return res.json();
     }).catch((e) => {
       throw new Error(e);
     }).finally(() => {

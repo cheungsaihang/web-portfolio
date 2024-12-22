@@ -1,44 +1,80 @@
-import { NextRequest, NextResponse } from "next/server";
-import { API_hikingListSchema, API_HikingList } from "@/types/api/hiking";
-import { prepareQuery, QueryCondition } from "@/modules/server/api";
-import { handleHikingList } from "@/modules/server/api/handlers/hiking";
+import { NextRequest } from "next/server";
+import { Zod_API_hikingListSchema, API_HikingList } from "@/types/api/hiking";
+import { prepareQuery, prepareGetImageUrl } from "@/modules/server/firebase";
+import { QueryResponse } from "@/modules/server/firebase/services/db";
 import { getAllParams, getRequestPageNumber } from "@/utils/nextRequest";
 import { PAGINATION_LIMIT } from "@/constants";
-import { API_ListResponse } from "@/types/api";
+import { FS_HikingSchema } from "@/modules/server/firebase/schemas/hiking.schema";
+import { ApiResponse } from "@/utils/nextResponse";
+
+const collectionId = 'hiking';
+const downloadImageFn = prepareGetImageUrl();
+
+export async function GET(request:NextRequest) {
+  //Get Tags
+  const tags = await getTags();
+  //Handle request params
+  const [searchTags, page] = getAllParams(request)('tags','page');
+  const _limit = PAGINATION_LIMIT + 1;
+  const _page = getRequestPageNumber(page);
+  const _search = ( searchTags && tags.indexOf(searchTags) > 0 ) ? { tags:searchTags } : undefined;
+  //Prepare Database query
+  const queryFn = prepareQuery(collectionId,{
+    search:_search,
+    page:_page,
+    order: ['order'], 
+    limit: _limit
+  });
+  //Invoke
+  const result = await queryFn();
+  if(!result){
+    return ApiResponse(200,{
+      tags:tags,
+      records:null,
+      pagination:{
+        currentPage:_page,
+        isMorePage:false
+      }
+    });
+  }
+  //Download Images and convert result
+  const records = await convertResult(result);
+  const isMorePage = records.length >= _limit || false;
+  return ApiResponse(200,{
+    tags:tags,
+    records: isMorePage ? records.slice(0,-1) : records,
+    pagination:{
+      currentPage:_page,
+      isMorePage:isMorePage
+    }
+  });
+}
+
+async function convertResult(res:QueryResponse){
+  const list =  await Promise.all(res.docs.map(async (doc) => {
+    const id = doc.id;
+    const data = doc.data() as FS_HikingSchema;
+    const pic = !data?.pics 
+                 ? undefined
+                 : await downloadImageFn({
+                    docType:collectionId,
+                    docId:id,
+                    docPic:data.pics[0]
+                  });
+    return {
+      id:id,
+      name:data?.name,
+      pic:pic
+    }
+  }));
+  return list.filter(doc => Zod_API_hikingListSchema.safeParse(doc).success) as API_HikingList[];
+}
 
 async function getTags(){
   const res = await fetch(process.env.API_ENDPOINT  + '/api/tags/hiking',{ cache: 'no-store' });
   const data = await res.json() as string[];
   const tags = ['全部',...data];
   return tags;
-}
-
-export async function GET(request:NextRequest) {
-  const tags = await getTags();
-  const [searchTags, page] = getAllParams(request)('tags','page');
-  const _limit = PAGINATION_LIMIT + 1;
-  const condition:QueryCondition = { order: ['order'], limit: _limit};
-  condition.page = getRequestPageNumber(page);
-  condition.search = ( searchTags && tags.indexOf(searchTags) > 0 ) ? { tags:searchTags } : undefined;
-
-  const response:API_ListResponse<API_HikingList> = { tags: tags, records: null, pagination: { currentPage: condition.page, isMorePage: false } };
-
-  //Invoke
-  const queryFn = prepareQuery('hiking',condition);
-  const result = await queryFn();
-  if(result){
-    const data = await handleHikingList(result);
-    const res = data && data.filter(doc => API_hikingListSchema.safeParse(doc).success);
-    const records = res ? res as API_HikingList[] : null;
-    if(records && records.length >= _limit){
-      response.records = records.slice(0,-1);
-      response.pagination.isMorePage = true;
-    }
-    else{
-      response.records = records;
-    }
-  }
-  return NextResponse.json(response);
 }
 
 //Static Segment - with revalidate option is ISR. The revalidation frequency is 900 sec 

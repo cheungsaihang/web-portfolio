@@ -2,7 +2,7 @@
 import { useContext, ReactNode } from "react";
 import createScrollPaginationContext, { OnEndReached } from "@/contexts/scrollPaginationContext";
 import { API_HikingList } from "@/types/api/hiking";
-import { API_ListResponse } from "@/types/api";
+import { API_ListResponse, API_Success } from "@/types/api";
 
 type List = API_HikingList;
 
@@ -39,7 +39,8 @@ const onEndReached = (url:string) => {
   const query:OnEndReached<List> = async (nextPage:number) => {
     const pageQuery = `${url.search(/\?/) != -1 ? '&' : '?'}page=${nextPage}`;
     const res = await fetch(`${url}${pageQuery}`, { next: { revalidate: 900 }});
-    const data = await res.json() as API_ListResponse<List>;
+    const body = await res.json() as API_Success<API_ListResponse<List>>;
+    const data = body.result;
     if(data.records){
       return {
         newList:data.records,

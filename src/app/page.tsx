@@ -1,3 +1,4 @@
+import { API_Success } from "@/types/api";
 import { FS_Article_Home } from "@/types/api/home";
 import { styled, css } from "@pigment-css/react";
 
@@ -89,6 +90,7 @@ export default async function Home() {
 
 async function getHomeArticle() {
   const res = await fetch(process.env.API_ENDPOINT  + '/api/home',{ cache: 'no-store' });
-  const article = await res.json() as FS_Article_Home;
+  const body = await res.json() as API_Success<FS_Article_Home>;
+  const article = body.result;
   return article;
 }

@@ -28,3 +28,28 @@ export function getRequestPageNumber(page:string | null):number{
   }
   return 1;
 }
+
+export async function getPostParams<R>(request:NextRequest){
+  try{
+    const body = await request.json();
+    return body as R;
+  }
+  catch(err){
+    console.log("Post Param Error",err);
+    return null;
+  }
+}
+
+export function getAuthorizationHeader(request:NextRequest){
+  return (authorizationName:string) => {
+    const authorization = request.headers.get('authorization');
+    if(!authorization){
+      return null;
+    }
+    const [name, value] = authorization.split(' ');
+    if(name.trim().toLowerCase() != authorizationName.toLowerCase()){
+      return null;
+    }
+    return value.trim();
+  }
+}

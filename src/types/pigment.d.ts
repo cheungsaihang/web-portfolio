@@ -29,6 +29,9 @@ declare module "@pigment-css/react/theme" {
       menuTag:string;
       menuTagHover:string;
       menuTagActive:string;
+      button:string;
+      buttonBlur:string;
+      errorText:string;
     };
     sizes:{
       fonts:{

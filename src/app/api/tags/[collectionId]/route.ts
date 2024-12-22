@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { CollectionType, prepareGetDoc, isValidCollection } from "@/modules/server/api";
+import { prepareGetDoc } from "@/modules/server/firebase";
+import { CollectionType, isValidCollection } from "@/modules/server/firebase/util";
 
 type Params = {
   collectionId: CollectionType

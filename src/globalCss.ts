@@ -27,5 +27,11 @@ globalCss`
   h1, h2, h3, h4, h5, h6, p {
     margin-block-end:0;
     margin-block-start:0;
-  }  
+  }
+  input {
+    outline:none;
+  }
+  input:focus {
+    outline:none !important;
+  }
 `;

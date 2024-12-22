@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { WEBSITE_NAME } from "@/constants";
 import { API_HikingList } from "@/types/api/hiking";
-import { API_ListResponse } from "@/types/api";
+import { API_ListResponse, API_Success } from "@/types/api";
 import HikingListing from "./content";
 import Container from "./container";
 
 async function getHikingList(){
   const res = await fetch(`${process.env.API_ENDPOINT}/api/hiking`,{ cache: 'no-store' });
-  return await res.json() as API_ListResponse<API_HikingList>;
+  const body = await res.json() as API_Success<API_ListResponse<API_HikingList>>;
+  return body.result;
 }
 
 export const metadata: Metadata = {

@@ -1,20 +1,50 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { API_restaurantDetailSchema } from "@/types/api/restaurant";
-import { prepareGetDoc } from "@/modules/server/api";
-import { handleRestaurantDetail } from "@/modules/server/api/handlers/restaurant";
+import { type NextRequest } from "next/server"
+import { Zod_API_restaurantDetailSchema } from "@/types/api/restaurant";
+import { prepareGetDoc, prepareGetImageUrl } from "@/modules/server/firebase";
+import { DocResponse } from "@/modules/server/firebase/services/db";
+import { ApiResponse } from "@/utils/nextResponse";
+import { FS_RestaurantSchema } from "@/modules/server/firebase/schemas/restaurant.schema";
 
 type Params = {
   restaurantId: string
 }
+const collectionId = 'restaurant';
+const downloadImageFn = prepareGetImageUrl();
+
 export async function GET(request: NextRequest, context: { params: Promise<Params> } ) {
   const { restaurantId } = await context.params;
-  const getDocFn = prepareGetDoc('restaurant',restaurantId);
+  const getDocFn = prepareGetDoc(collectionId,restaurantId);
   const result = await getDocFn();
   if(result){
-    const data = await handleRestaurantDetail(result);  
-    const res = (data && API_restaurantDetailSchema.safeParse(data).success) ? data : null;
-    return NextResponse.json(res);
+    const res = await convertResult(result);
+    if(Zod_API_restaurantDetailSchema.safeParse(res).success){
+      return ApiResponse(200,res);
+    }    
   }
-  return NextResponse.json(null);
+  return ApiResponse(404,{short:"page_not_found",message:"Page not Found"});
 }
-//Dynamic segment - Default is SSR. Todo: Setup Generating Static Params function to change to ISR.
+
+async function convertResult(doc:DocResponse){
+  const id = doc.id;
+  const data = doc.data() as FS_RestaurantSchema;
+  const reviews = await Promise.all(data.reviews.map(async (item) => ({
+    review: item.review,
+    pic: item?.pic ? await downloadImageFn({docType:collectionId,docId:id,docPic:item.pic}) : undefined,
+    order: item.order,
+  })));
+  //Reviews ordering
+  reviews.sort(function(a, b) {
+    if (a.order < b.order) return -1;
+    if (a.order > b.order) return 1;
+    return 0;
+  });
+
+  return {
+    id:id,
+    name:data?.name,
+    reviews: reviews,
+    location: data?.location,
+    rate: data?.rate,
+    tags: data?.tags
+  }
+}

@@ -1,21 +1,17 @@
-import { NextResponse } from "next/server";
-import FirebaseApp from "@/modules/server/firebase/app";
-import { getFSDocById } from "@/modules/server/firebase/services/db";
-import { isApiSuccess } from "@/utils/api";
+import { prepareGetDoc } from "@/modules/server/firebase";
 import { FS_Article_Home } from "@/types/api/home";
-
-const firebaseApp = FirebaseApp.getApp();
+import { ApiResponse } from "@/utils/nextResponse";
 
 async function getHomeArticle(){
   // Fetch data from firestore
-  const res = await getFSDocById(firebaseApp)('article','home');
-  if(!isApiSuccess(res)){
+  const getDocFn = prepareGetDoc('article','home');
+  const doc = await getDocFn();
+  if(!doc){
     return null;
   }
-  const doc = res.data;
+  
   const id = doc.id;
   const data = doc.data() as FS_Article_Home;
-
   return {
     id:id,
     ...data
@@ -24,7 +20,11 @@ async function getHomeArticle(){
 
 export async function GET() {
   const res = await getHomeArticle();
-  return NextResponse.json(res);
+  if(!res){
+    return ApiResponse(404,{short:'home_article_not_found', message: 'Cannot find home page article'});
+
+  }
+  return ApiResponse(200,res);
 }
 
 //Static segment - default is SSG
