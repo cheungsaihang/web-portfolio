@@ -6,6 +6,7 @@ import { PAGINATION_LIMIT } from "@/constants";
 import { QueryResponse } from "@/modules/server/firebase/services/db";
 import { FS_RestaurantSchema } from "@/modules/server/firebase/schemas/restaurant.schema";
 import { ApiResponse } from "@/utils/nextResponse";
+import { API_Success } from "@/types/api";
 
 const collectionId = 'restaurant';
 const downloadImageFn = prepareGetImageUrl();
@@ -52,7 +53,8 @@ export async function GET(request:NextRequest) {
 
 async function getTags(){
   const res = await fetch(process.env.API_ENDPOINT  + '/api/tags/restaurant',{ cache: 'no-store' });
-  const data = await res.json() as string[];
+  const body = await res.json() as API_Success<string[]>;
+  const data =  body.result;
   const tags = ['全部',...data];
   return tags;
 }

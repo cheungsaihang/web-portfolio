@@ -5,3 +5,7 @@ export function isStringNumber(number:string | null):number is string{
   }
   return false;
 }
+
+export function isServer(){
+  return typeof window === 'undefined';
+}

@@ -1,7 +1,6 @@
 import { useAuthUserContext } from '@/contexts/useAuthContext';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { css, styled } from "@pigment-css/react";
-import Link from 'next/link';
 
 const cssAccountIcon = css(({theme}) => ({
   fontSize:`${theme.sizes.fonts.icon} !important`,
@@ -27,9 +26,9 @@ export default function AccountIcon(){
     <>
       {
         email ? (
-          <Link href={'/profile'} ><Avatar email={email}/></Link>
+          <a href={'/profile'} ><Avatar email={email}/></a>
         ) : (
-          <Link href={'/login'} ><AccountCircleIcon className={cssAccountIcon}  /></Link>
+          <a href={'/login'} ><AccountCircleIcon className={cssAccountIcon}  /></a>
         )
       }
     </>

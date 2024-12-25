@@ -6,6 +6,7 @@ import { getAllParams, getRequestPageNumber } from "@/utils/nextRequest";
 import { PAGINATION_LIMIT } from "@/constants";
 import { FS_HikingSchema } from "@/modules/server/firebase/schemas/hiking.schema";
 import { ApiResponse } from "@/utils/nextResponse";
+import { API_Success } from "@/types/api";
 
 const collectionId = 'hiking';
 const downloadImageFn = prepareGetImageUrl();
@@ -72,10 +73,10 @@ async function convertResult(res:QueryResponse){
 
 async function getTags(){
   const res = await fetch(process.env.API_ENDPOINT  + '/api/tags/hiking',{ cache: 'no-store' });
-  const data = await res.json() as string[];
+  const body = await res.json() as API_Success<string[]>;
+  const data =  body.result;
   const tags = ['全部',...data];
   return tags;
 }
 
 //Static Segment - with revalidate option is ISR. The revalidation frequency is 900 sec 
-export const revalidate = 900;

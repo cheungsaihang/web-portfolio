@@ -37,7 +37,7 @@ const tagActiveCss = css(({theme}) => ({
 }));
 
 type SelectorProps = {
-  initTagIndex:number;
+  initTagIndex?:number;
   children:ReactNode;
 };
 
@@ -84,7 +84,7 @@ const Tag = (props:TagProps) => {
 };
 
 const TagsSelector:ITagsSelector = ({initTagIndex, children}) => {
-  const [ activeTag, setActiveTag ] = useState(initTagIndex);
+  const [ activeTag, setActiveTag ] = useState(initTagIndex || 0);
   return (
     <TagsContext.Provider value={{
       activeTag:activeTag,

@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { WEBSITE_NAME } from "@/constants";
-import RestaurantListing from "./content";
-import { API_RestaurantList } from "@/types/api/restaurant";
-import { API_ListResponse, API_Success } from "@/types/api";
-import Container from "./container";
+import { API_Error, API_Success } from "@/types/api";
+import Content from "./content";
+import { isErrorResponse } from "@/utils/nextResponse";
 
-async function getRestaurantList(){
-  const res = await fetch(`${process.env.API_ENDPOINT}/api/restaurant` ,{ cache: 'no-store' });
-  const body = await res.json() as API_Success<API_ListResponse<API_RestaurantList>>;
-  return body.result;
+async function getTags(){
+  const res = await fetch(process.env.API_ENDPOINT  + '/api/tags/restaurant',{ cache: 'no-store' });
+  const body = await res.json() as API_Success<string[]> | API_Error;
+  const tags = isErrorResponse(body) ? ['全部'] : ['全部',...body.result];
+  return tags;
 }
 
 export const metadata: Metadata = {
@@ -17,10 +17,6 @@ export const metadata: Metadata = {
 }
 
 export default async function Page() {
-  const res = await getRestaurantList();
-  return ( 
-    <Container res={res}>
-      <RestaurantListing /> 
-    </Container>
-  );
+  const tags = await getTags();
+  return ( <Content tags={tags} />);
 }
