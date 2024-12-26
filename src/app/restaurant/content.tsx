@@ -1,36 +1,14 @@
-"use client"
-import { useState } from "react";
-import dynamic from "next/dynamic";
-import Tags from '@/modules/client/TagsSelector';
-import Loading from "./_loading";
 import { API_URL } from "@/constants/api";
 import { API_Error, API_ListResponse, API_Success } from "@/types/api";
 import { API_RestaurantList } from "@/types/api/restaurant";
 import { isErrorResponse } from "@/utils/nextResponse";
 import { isServer } from "@/utils/common";
+import RestaurantList from "./restaurantList";
 
-const RestaurantList = dynamic(() => import('./restaurantList'),{
-  loading: () => <Loading />,
-  ssr:false
-})
-
-export default function Content({tags}:{tags:string[];}) {
-  const [currentTag, setCurrentTag] = useState(0);
-  const apiUrl = API_URL.restaurant + `${currentTag ? `?tags=${tags[currentTag]}` : '' }`;
-  const listPromise = getInitalList(apiUrl);
-
-  return (
-    <>  
-      <Tags>
-        {
-          tags.map((tag,index) => (
-            <Tags.Tag key={`tag-${index}`} tagId={index} onClick={setCurrentTag}>{tag}</Tags.Tag>
-          ))
-        }
-      </Tags>
-      <RestaurantList listPromise={listPromise} apiUrl={apiUrl} />
-    </>
-  );
+export default async function Content({tagId,tags}:{tagId:number; tags:string[];}) {
+  const apiUrl = API_URL.restaurant + `${tagId ? `?tags=${tags[tagId]}` : '' }`;
+  const initList = await getInitalList(apiUrl);
+  return ( <RestaurantList initList={initList} apiUrl={apiUrl} /> );
 }
 
 async function getInitalList(path:string){

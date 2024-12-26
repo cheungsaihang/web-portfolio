@@ -1,17 +1,16 @@
 "use client"
-import { use } from "react";
 import { ScrollContextProvider } from "./useContext";
 import { API_HikingList } from "@/types/api/hiking";
 import HikingListItem from "./hikingListItems";
 
 export default function HikingList({
   apiUrl,
-  listPromise
+  initList
 }:{
   apiUrl:string
-  listPromise:Promise<{list:API_HikingList[] | null, isMorePage:boolean}>
+  initList:{list:API_HikingList[] | null, isMorePage:boolean}
 }) {
-  const {list, isMorePage} = use(listPromise);
+  const {list, isMorePage} = initList;
  
   return (
     <ScrollContextProvider

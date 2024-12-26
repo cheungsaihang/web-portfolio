@@ -1,4 +1,5 @@
 import { css } from "@pigment-css/react";
+import Link from "next/link";
 
 const navStyle = css`
   margin-left:-${({theme}) => theme.sizes.spacing.mainInner};
@@ -38,7 +39,7 @@ export default function Breadcrumb({
           items.map((item,id) => (
             <li className={listItemStyle} key={id}>
               { 
-                item.link ? <a href={item.link} className={linkStyle}>{item.name}</a> : item.name
+                item.link ? <Link href={item.link} className={linkStyle}>{item.name}</Link> : item.name
               }
             </li>
           ))
