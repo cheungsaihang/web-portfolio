@@ -21,8 +21,7 @@ const StyledNav = styled('nav')(({ theme }) => ({
   [`@media (max-width: ${theme.media.screenS})`]:{
     position:'fixed',
     top:51,
-    width:'100%',
-    left: ({open}:{open?:boolean}) => (open ? 0 : '-100%'),
+    left: ({open}:{open?:boolean}) => (open ? 0 : -200),
     transition:'left .15s linear',
     zIndex:1002
   }

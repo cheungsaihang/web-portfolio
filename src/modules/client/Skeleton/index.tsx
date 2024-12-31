@@ -26,22 +26,25 @@ export function SkeletionView({
   height,
   rounded,
   aspectRatio,
+  style,
 }:{
   width?:number | string;
   height?:number | string;
   rounded?:boolean;
   aspectRatio?:'1 / 1' | '4 / 3' | '3 / 4' | '16 / 9' | '9 / 16';
+  style?:CSSProperties;
 }){
   const Skeleton = styled('div')(({theme}) => ({
     backgroundColor:theme.colors.skeleton,
   }));
   const _width = width ? width : '75%';
   const _height = height ? height : 14;
-  const style = {
+  const _style = {
+    ...style,
     aspectRatio: aspectRatio ? aspectRatio : undefined,
     width: _width,
     height: aspectRatio ? undefined : _height,
-    borderRadius: rounded ? 20 : undefined
+    borderRadius: rounded ? 20 : undefined,
   } as CSSProperties;
-  return <Skeleton style={style}/>;
+  return <Skeleton style={_style}/>;
 }

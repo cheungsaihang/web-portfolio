@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { WEBSITE_NAME } from "@/constants";
 import { API_Error, API_Success } from "@/types/api";
-import Tags from '@/modules/server/TagsSelector';
 import { isErrorResponse } from "@/utils/nextResponse";
 import dynamic from "next/dynamic";
 import Loading from "./_loading";
 import { getKeyParam } from "@/utils/nextRequest";
 import { SearchParams } from "@/types";
 import { redirect } from "next/navigation";
+import Wrapper from "./wrapper";
 
 const Content = dynamic(() => import('./content'),{
   loading: () => <Loading />,
@@ -34,16 +34,9 @@ export default async function Page({searchParams}:{searchParams:Promise<SearchPa
     return null;
   }
   return ( 
-    <>
-      <Tags>
-        {
-          tags.map((tag,index) => (
-            <Tags.Tag href={`/hiking?tags=${tag}`} isActive={(index == currentTagId)} key={`tag-${index}`}>{tag}</Tags.Tag>
-          ))
-        }
-      </Tags>
+    <Wrapper tags={tags} tagId={currentTagId}>
       <Content tags={tags} tagId={currentTagId} />
-    </>
+    </Wrapper>
   );
 }
 

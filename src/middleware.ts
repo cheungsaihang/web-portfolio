@@ -28,7 +28,7 @@ export default async function middleware(request: NextRequest) {
     if(!accessToken){
       return NextResponse.redirect(new URL('/login', request.nextUrl));
     }
-    const isSuccess = await sessionApi(accessToken).validate().then();
+    const isSuccess = await sessionApi(accessToken).validate();
     const newSessionTokens = !isSuccess && refreshToken && await sessionApi(accessToken).refresh(refreshToken);
     if(!isSuccess){
       if(!newSessionTokens){

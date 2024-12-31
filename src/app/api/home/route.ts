@@ -26,5 +26,3 @@ export async function GET() {
   }
   return ApiResponse(200,res);
 }
-
-//Static segment - default is SSG

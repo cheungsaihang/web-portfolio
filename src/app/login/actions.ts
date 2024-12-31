@@ -2,7 +2,6 @@
 import { API_Error, API_Success } from "@/types/api";
 import { API_LoginResult } from "@/types/api/users";
 import { isErrorResponse } from "@/utils/nextResponse";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { sessionCookies } from "@/utils/sesstion";
 
@@ -36,7 +35,7 @@ export async function login(prevState:unknown, formData:FormData){
     }
   }
   (await sessionCookies()).set(login.result.token.accessToken, login.result.token.refreshToken);
-  redirect('/');
+  return { success: true };
 }
 
 async function doLogin(email:string,password:string){

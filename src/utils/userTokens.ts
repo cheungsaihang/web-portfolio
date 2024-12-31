@@ -1,11 +1,11 @@
 "use server"
-import { SignJWT, jwtVerify } from "jose";
+import { SignJWT, jwtVerify, decodeJwt } from "jose";
 import { v4 as uuidv4 } from "uuid";
 
 const secretKey = process.env.ACCESS_TOKEN_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
 
-type AccessTokenPayload = {
+export type AccessTokenPayload = {
   userId:string;
   email:string;
 }
@@ -49,6 +49,15 @@ export async function decrypt(accessToken: string) {
   }
 }
 
+export async function decodeAccessToken(accessToken: string) {
+  try {
+    const payload  = decodeJwt(accessToken);
+    return Promise.resolve(payload);
+  } catch (error) {
+    console.log("User Token Decode Fail",error);
+    return Promise.resolve(null);
+  }
+}
 function generateAccessTokenExpire():Date{
   //Expire time of Access Token is 2 hours
   return new Date(Date.now() + 2 * 60 * 60 * 1000);

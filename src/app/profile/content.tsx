@@ -1,36 +1,7 @@
 "use client"
-import { useAuthUserContext } from "@/contexts/useAuthContext";
-import { css, styled } from "@pigment-css/react";
-
-const Container = styled('div')({
-  marginTop:10,
-  display:'flex',
-  justifyContent:'center',
-});
-const Frame = styled('div')(({theme}) => ({
-  padding:20,
-  borderWidth:1,
-  borderColor:theme.colors.skeleton,
-  borderStyle:'solid',
-  borderRadius:10,
-}));
-const Row = styled('div')({
-  display:'flex',  
-  paddingTop:10,
-  paddingBottom:10,
-});
-const Label = styled('div')(({theme}) => ({
-  fontSize:'1.5rem',
-  color:theme.vars.colors.foreground,
-  width:100,
-  textAlign:'center',
-  fontWeight:'bolder',
-}));
-const Value = styled('div')(({theme}) => ({
-  fontSize:'1.5rem',
-  color:theme.vars.colors.foreground,
-  width:200,
-}));
+import { API_UsersSchema } from "@/types/api/users";
+import { css } from "@pigment-css/react";
+import * as P from "@/modules/client/StyledComponent/Profile";
 
 const cssButton = css(({theme}) => ({
   display:'block',
@@ -45,26 +16,25 @@ const cssButton = css(({theme}) => ({
 }));
 
 
-export default function ProfileContent() {
-  const authConext = useAuthUserContext();
+export default function ProfileContent({user}:{user:API_UsersSchema | null}) {
   const initalUser = { firstname:'', lastname:'', email:''};
-  const { firstname, lastname, email } = authConext?.authUser || initalUser;
+  const { firstname, lastname, email } = user || initalUser;
   return ( 
-    <Container>
-      <Frame>
-      <Row>
-        <Label>名稱:</Label>
-        <Value>{`${firstname} ${lastname}`}</Value>
-      </Row>
-      <Row>
-        <Label>電郵:</Label>
-        <Value>{email}</Value>
-      </Row>
-      <Row>
-        <Label />
-        <Value><a href='/logout' className={cssButton}>登出</a></Value>
-      </Row>    
-      </Frame>  
-    </Container>
+    <P.Container>
+      <P.Frame>
+      <P.Row>
+        <P.Label>名稱:</P.Label>
+        <P.Value>{`${firstname} ${lastname}`}</P.Value>
+      </P.Row>
+      <P.Row>
+        <P.Label>電郵:</P.Label>
+        <P.Value>{email}</P.Value>
+      </P.Row>
+      <P.Row>
+        <P.Label />
+        <P.Value><a href='/logout' className={cssButton}>登出</a></P.Value>
+      </P.Row>    
+      </P.Frame>  
+    </P.Container>
   );
 }

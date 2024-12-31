@@ -15,16 +15,12 @@ export async function GET(request:NextRequest){
     return ApiResponse(505,{ short:'access_token_invalid', message: 'Access token is invalid'});
   }
   const userId = jwtResult.userId as string;
-  const email = jwtResult.email as string;
   const getDocFn = prepareGetDoc('users',userId);
   const doc = await getDocFn();
   if(!doc){
     return ApiResponse(404,{ short:'user_not_found', message: 'Can not find user record'});
   }
   const user = doc.data() as FS_UsersSchema;
-  if(email != user.email){
-    return ApiResponse(505,{ short:'access_token_invalid', message: 'Access token is invalid'});
-  }
   return ApiResponse(200,{
     id:doc.id,
     email:user.email,

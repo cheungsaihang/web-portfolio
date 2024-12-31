@@ -78,5 +78,3 @@ async function getTags(){
   const tags = ['全部',...data];
   return tags;
 }
-
-//Static Segment - with revalidate option is ISR. The revalidation frequency is 900 sec 

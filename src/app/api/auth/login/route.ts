@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     return ApiResponse(405, { short:'password_not_match', message: 'Password not matched' });
   }
   //Generate bearer token and response login success
-  const tokens = await generateUserTokens({userId, email});
+  const tokens = await generateUserTokens({userId:userId, email:email.charAt(0)});
 
   const addDocFn = prepareAddDoc('refreshTokens',{
     userId:userId,

@@ -1,12 +1,12 @@
 "use client"
-import { ReactNode, useState } from "react";
+import { MouseEventHandler, ReactNode, useState } from "react";
 import { styled } from "@pigment-css/react";
 import Drawer from "./Drawer";
 import Main from "./Main";
-import ThemeSwitcher from '@/modules/client/ThemeSwitcher';
 import MenuSwitcher from './MenuSwitcher';
 import Image from "next/image";
-import AccountIcon from "./AccountIcon";
+import Controller from "./Controller";
+import { usePathname, useRouter } from "next/navigation";
 
 const Layout = styled('div')(({theme})=> ({
   display:'flex',
@@ -32,16 +32,38 @@ const Wrap = styled('div')({
   width:60
 });
 
-export default function NavRrawer({ children }:{ children:ReactNode}){
+const Shadow = styled('div')<{ show?: boolean }>({
+  display: ({show}) => show ? 'block' : 'none',
+  position:'fixed',
+  top:0,
+  left:0,
+  right:0,
+  bottom:0,
+  backgroundColor:'rgba(0,0,0,.6)',
+  zIndex:1001,
+});
+
+export default function NavRrawer({ children }:{ children:ReactNode }){
+  const router = useRouter();
+  const pathname = usePathname();
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
+  const onMenuClick:MouseEventHandler<HTMLAnchorElement> = (e) => {
+    e.preventDefault();
+    if(pathname != e.currentTarget.href){
+      router.push(e.currentTarget.href);
+    }
+    closeMenu();
+  }
   return (
     <Layout>
+      <Shadow show={isMenuOpen} onClick={closeMenu}/>
       <Drawer open={isMenuOpen}>
         <Drawer.Header />
         <Drawer.List>
-          <Drawer.Item><a href="/">主頁</a></Drawer.Item>
-          <Drawer.Item><a href="/restaurant">餐廳</a></Drawer.Item>
-          <Drawer.Item><a href="/hiking">行山</a></Drawer.Item>
+          <Drawer.Item><a href="/" onClick={onMenuClick}>主頁</a></Drawer.Item>
+          <Drawer.Item><a href="/restaurant" onClick={onMenuClick}>餐廳</a></Drawer.Item>
+          <Drawer.Item><a href="/hiking" onClick={onMenuClick}>行山</a></Drawer.Item>
         </Drawer.List>
       </Drawer>
       <Main>
@@ -51,8 +73,7 @@ export default function NavRrawer({ children }:{ children:ReactNode}){
           </Wrap>
           <LogoContainer><Image src={'/images/logo.gif'} fill alt={'Logo'}/></LogoContainer>
           <Wrap>
-            <ThemeSwitcher />
-            <AccountIcon />
+            <Controller onClick={closeMenu}/>
           </Wrap>
         </Main.Header>
         <Main.Body>{children}</Main.Body>
