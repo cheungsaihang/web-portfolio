@@ -20,15 +20,15 @@ export async function sessionCookies(){
     cookiesFn.set('sid',accessToken, secureOption);
     cookiesFn.set('rsid',refreshToken, secureOption);
   }
-  const clear = () => {
-    cookiesFn.delete('sid');
-    cookiesFn.delete('rsid');
-  }
+  // Problem in Safari - only deleted one cookie when secure:true in production
+  // const clear = () => {
+  //   cookiesFn.delete('sid');
+  //   cookiesFn.delete('rsid');
+  // }
 
   return {
     get,
     set,
-    clear
   }
 }
 

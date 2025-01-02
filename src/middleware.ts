@@ -17,15 +17,13 @@ export default async function middleware(request: NextRequest) {
 
   //Logout Route - cookies delete function must be in server action or middleware
   if(isLogoutRoute){
-    const response = NextResponse.next();
+    const response = NextResponse.redirect(new URL('/', request.nextUrl));
     response.cookies.delete('sid');
     response.cookies.delete('rsid');
-    //session.clear();
     if(accessToken && refreshToken){
       await sessionApi(accessToken).clear(refreshToken);
     }
     return response;
-    //return NextResponse.redirect(new URL('/', request.nextUrl));
   }
   //Protected Route - require authentication page
   if(isProtectedRoute){
@@ -36,8 +34,10 @@ export default async function middleware(request: NextRequest) {
     const newSessionTokens = !isSuccess && refreshToken && await sessionApi(accessToken).refresh(refreshToken);
     if(!isSuccess){
       if(!newSessionTokens){
-        session.clear();
-        return NextResponse.redirect(new URL('/login', request.nextUrl));
+        const response = NextResponse.redirect(new URL('/login', request.nextUrl));
+        response.cookies.delete('sid');
+        response.cookies.delete('rsid');
+        return response;
       }
       //Refresh Tokens Success
       const [newAccessTokens, newRefreshTokens] = newSessionTokens;
