@@ -17,11 +17,14 @@ export default async function middleware(request: NextRequest) {
 
   //Logout Route - cookies delete function must be in server action or middleware
   if(isLogoutRoute){
-    session.clear();
+    const response = NextResponse.next();
+    response.cookies.delete('sid');
+    response.cookies.delete('rsid');
+    //session.clear();
     if(accessToken && refreshToken){
       await sessionApi(accessToken).clear(refreshToken);
     }
-    return NextResponse.next();
+    return response;
     //return NextResponse.redirect(new URL('/', request.nextUrl));
   }
   //Protected Route - require authentication page
