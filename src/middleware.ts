@@ -21,7 +21,8 @@ export default async function middleware(request: NextRequest) {
     if(accessToken && refreshToken){
       await sessionApi(accessToken).clear(refreshToken);
     }
-    return NextResponse.redirect(new URL('/', request.nextUrl));
+    return NextResponse.next();
+    //return NextResponse.redirect(new URL('/', request.nextUrl));
   }
   //Protected Route - require authentication page
   if(isProtectedRoute){
