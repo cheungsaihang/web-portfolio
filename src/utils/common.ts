@@ -9,3 +9,7 @@ export function isStringNumber(number:string | null):number is string{
 export function isServer(){
   return typeof window === 'undefined';
 }
+
+export function isServerBuild(){
+  return process?.env?.npm_lifecycle_event == 'build' && process?.env?.NODE_ENV != 'development';
+}

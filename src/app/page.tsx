@@ -1,5 +1,8 @@
-import { API_Success } from "@/types/api";
+import ErrorPage from "@/modules/client/ErrorPage";
+import { API_Error, API_Success } from "@/types/api";
 import { FS_Article_Home } from "@/types/api/home";
+import { isServerBuild } from "@/utils/common";
+import { isErrorResponse } from "@/utils/nextResponse";
 import { styled, css } from "@pigment-css/react";
 
 const Heading = styled('h2')({
@@ -50,6 +53,10 @@ const Article = styled('article')(({ theme }) => ({
 export default async function Home() {
   const article = await getHomeArticle();
 
+  if(!article){
+    return ( <ErrorPage />);
+  }
+
   return (
     <Article>
         <p className={css`padding:0px 20px`}>{article.intro}</p>
@@ -89,8 +96,23 @@ export default async function Home() {
 }
 
 async function getHomeArticle() {
+  //production ssg
+  if(isServerBuild()){
+    const homeApi = await import("@/libs/firebase/homeApi");
+    const article = await homeApi.fetchHomeArticle();
+    if(!article){
+      throw Error('Build Error - Cannot get home page article');
+    }
+    return article;
+  }
+  //development ssr
   const res = await fetch(process.env.API_ENDPOINT  + '/api/home',{ cache: 'no-store' });
-  const body = await res.json() as API_Success<FS_Article_Home>;
+  const body = await res.json() as API_Success<FS_Article_Home> | API_Error;
+  if(isErrorResponse(body)){
+    return null;
+  }
   const article = body.result;
   return article;
 }
+
+export const dynamic = 'force-static';

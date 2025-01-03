@@ -26,7 +26,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@pigment-css/nextjs-plugin": "^0.0.28",
+    "@pigment-css/nextjs-plugin": "^0.0.29",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
     "@types/react": "^18",

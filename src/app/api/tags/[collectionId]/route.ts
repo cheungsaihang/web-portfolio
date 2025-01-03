@@ -1,21 +1,29 @@
 import { type NextRequest } from "next/server"
-import { prepareGetDoc } from "@/modules/server/firebase";
 import { CollectionType, isValidCollection } from "@/modules/server/firebase/util";
 import { ApiResponse } from "@/utils/nextResponse";
+import { fetchTags } from "@/libs/firebase/tagsApi";
 
 type Params = {
   collectionId: CollectionType
 }
+//Return a list of `params` to populate the [collectionId] dynamic segment
+export async function generateStaticParams() {
+  return [
+    {
+      collectionId:'hiking'
+    },
+    {
+      collectionId:'restaurant'
+    }
+  ];
+}
+
 export async function GET(request: NextRequest, context: { params: Promise<Params> } ) {
   const { collectionId } = await context.params;
   if(isValidCollection(collectionId)){
-    const getDocFn = prepareGetDoc('tags',collectionId);
-    const doc = await getDocFn();
-    if(doc){
-      const data = doc.data() as { tags:string[] };
-      if(data?.tags && data.tags.length){
-        return ApiResponse(200,data.tags);
-      }
+    const tags = await fetchTags(collectionId);
+    if(tags){
+      return ApiResponse(200,tags);
     }
   }
   return ApiResponse(404,{short:'tags_not_found',message:'Cannot found tags'});
