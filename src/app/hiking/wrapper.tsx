@@ -2,7 +2,7 @@
 import { ReactNode, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Tags from '@/modules/client/TagsSelector';
-import Loading from "./_loading";
+import Loading from "./loading";
 export default function Wrapper({tags, tagId, children}:{tags:string[]; tagId:number; children:ReactNode}) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();

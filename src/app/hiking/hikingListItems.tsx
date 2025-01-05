@@ -3,7 +3,7 @@ import { css } from '@pigment-css/react';
 import { TitleWrap, Title, Card } from '@/modules/client/StyledComponent/Listing';
 import Grid from '@/modules/client/Grid';
 import LazyImage from '@/modules/client/LazyImage';
-import Loading from './_loading';
+import Loading from './loading';
 import { NoDataListing } from "@/modules/client/NoDataComponent";
 import { useScrollContext } from './useContext';
 

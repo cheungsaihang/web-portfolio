@@ -5,8 +5,8 @@ import { isErrorResponse } from "@/utils/nextResponse";
 import { isServer } from "@/utils/common";
 import HikingList from "./hikingList";
 
-export default async function Content({tagId,tags}:{tagId:number; tags:string[];}) {
-  const apiUrl = API_URL.hiking + `${tagId ? `?tags=${tags[tagId]}` : '' }`;
+export default async function Content({searchParam}:{searchParam:string | null;}) {
+  const apiUrl = API_URL.hiking + `${searchParam ? `?tags=${searchParam}` : '' }`;
   const initList = await getInitalList(apiUrl);
   return ( <HikingList initList={initList} apiUrl={apiUrl} /> );
 }
