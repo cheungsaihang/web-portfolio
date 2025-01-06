@@ -1,11 +1,12 @@
 "use client"
-import { MouseEventHandler, ReactNode, useState } from "react";
+import { MouseEventHandler, ReactNode, useState, useTransition } from "react";
 import { styled } from "@pigment-css/react";
 import Drawer from "./Drawer";
 import Main from "./Main";
 import MenuSwitcher from './MenuSwitcher';
 import Image from "next/image";
 import Controller from "./Controller";
+import Loading from "@/app/hiking/loading";
 import { usePathname, useRouter } from "next/navigation";
 
 const Layout = styled('div')(({theme})=> ({
@@ -47,11 +48,19 @@ export default function NavRrawer({ children }:{ children:ReactNode }){
   const router = useRouter();
   const pathname = usePathname();
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const closeMenu = () => setMenuOpen(false);
   const onMenuClick:MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
     if(pathname != e.currentTarget.href){
-      router.push(e.currentTarget.href);
+      if(['/restaurant','/hiking'].includes(e.currentTarget.href)){
+        startTransition(()=>{
+          router.push(e.currentTarget.href);
+        });
+      }
+      else{
+        router.push(e.currentTarget.href);
+      }
     }
     closeMenu();
   }
@@ -76,7 +85,7 @@ export default function NavRrawer({ children }:{ children:ReactNode }){
             <Controller onClick={closeMenu}/>
           </Wrap>
         </Main.Header>
-        <Main.Body>{children}</Main.Body>
+        <Main.Body>{isPending ? <Loading /> : children}</Main.Body>
       </Main>
     </Layout>
   );

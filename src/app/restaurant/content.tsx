@@ -5,8 +5,8 @@ import { isErrorResponse } from "@/utils/nextResponse";
 import { isServer } from "@/utils/common";
 import RestaurantList from "./restaurantList";
 
-export default async function Content({tagId,tags}:{tagId:number; tags:string[];}) {
-  const apiUrl = API_URL.restaurant + `${tagId ? `?tags=${tags[tagId]}` : '' }`;
+export default async function Content({searchParam}:{searchParam:string | null;}) {
+  const apiUrl = API_URL.restaurant + `${searchParam ? `?tags=${searchParam}` : '' }`;
   const initList = await getInitalList(apiUrl);
   return ( <RestaurantList initList={initList} apiUrl={apiUrl} /> );
 }

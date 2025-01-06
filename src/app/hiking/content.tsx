@@ -1,3 +1,4 @@
+"use server"
 import { API_URL } from "@/constants/api";
 import { API_Error, API_ListResponse, API_Success } from "@/types/api";
 import { API_HikingList } from "@/types/api/hiking";

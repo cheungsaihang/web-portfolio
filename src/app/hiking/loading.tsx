@@ -5,6 +5,25 @@ import { TitleWrap, Card } from '@/modules/client/StyledComponent/Listing';
 
 export default function Loading() {
   return (
+    <>
+      <SkeletonTags />
+      <SkeletionContent />
+    </>
+  )
+}
+
+function SkeletonTags(){
+  return (
+    <SkeletonAnimation>
+      <DuplicateComponent times={4}>
+        <SkeletionView width={46} height={26.5} rounded style={{display:'inline-block', marginRight:5}}/>
+      </DuplicateComponent>
+    </SkeletonAnimation>
+  )
+}
+
+export function SkeletionContent(){
+  return (
     <SkeletonAnimation>
       <Grid>
         <DuplicateComponent>
