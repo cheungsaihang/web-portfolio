@@ -56,10 +56,7 @@ export function sessionApi(accessToken:string){
     return true;
   }
   const refresh = async (refreshToken:string) => {
-    const res = await fetch(`${process.env.API_ENDPOINT}/api/auth/refreshToken/${refreshToken}`,{
-      ...options,
-      method: 'PUT'
-    });
+    const res = await fetch(`${process.env.API_ENDPOINT}/api/auth/refreshToken/${refreshToken}`,options);
     const body = await res.json() as API_Success<API_RefreshTokens> | API_Error;
     if(isErrorResponse(body)){
       return null;

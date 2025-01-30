@@ -28,7 +28,7 @@ export async function DELETE(request:NextRequest, context: { params: Promise<Req
   });
 }
 
-export async function PUT(request:NextRequest, context: { params: Promise<RequestBody> } ){
+export async function GET(request:NextRequest, context: { params: Promise<RequestBody> } ){
   const { token } = await context.params;
   //Check Bearer token whether it is missing
   const accessToken = getAuthorizationHeader(request)('Bearer');
