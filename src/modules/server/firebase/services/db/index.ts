@@ -10,18 +10,14 @@ import {
   DocumentSnapshot,
   getFirestore,
   query,
-  where,
   Query,
-  QueryFieldFilterConstraint,
-  orderBy,
-  limit,
-  startAt,
   setDoc,
   deleteDoc,
   addDoc
 } from 'firebase/firestore';
 import { FirebaseApp } from 'firebase/app';
-import { firebaseHandler } from '../handler';
+import { invoke } from '../../rpc';
+import { FS_OrderConditions, FS_WhereConditions, fsOrder, fsPagination, fsWhere } from './utils';
 export type DocResponse = DocumentSnapshot<DocumentData,DocumentData>;
 export type QueryRequest = Query<DocumentData, DocumentData>;
 export type QueryResponse = QuerySnapshot<unknown,DocumentData>;
@@ -33,41 +29,23 @@ export interface DocConverter<T extends object>{
   fromFirestore:(snapshot: QueryDocumentSnapshot,options: SnapshotOptions) => T 
 };
 
-type FSWhere = {
-  [key:string]:(field:string, keyword:string) => QueryFieldFilterConstraint
-}
-
-export type FsOrder = [
-  string, 'asc' | 'desc'
-][] | string[];
-
-export const fsWhere:FSWhere = {
-  inArray: (field, keyword) => where(field ,'array-contains',keyword),
-  equal: (field, keyword) => where(field ,'==',keyword)
-}
-
-export const getFSQuery = (app:FirebaseApp) => 
+export const prepareFSQuery = (app:FirebaseApp) => 
   (
     collectionId:string,
-    condition:{
-      where?:QueryFieldFilterConstraint[], 
-      order?:FsOrder,
-      offset?:number,
-      limit?:number
+    condition?:{
+      where?:FS_WhereConditions[], 
+      order?:FS_OrderConditions[],
+      page?:number,
+      length?:number
     } 
   ) => {
   const db = getFirestore(app);
   const ref = collection(db,collectionId);
-  const whereFns = condition?.where ? condition.where : [];
-  const orderFns = !condition?.order ? [] : condition.order.map((item => {
-    if(typeof item === 'string'){
-      return orderBy(item);
-    }
-    return orderBy(...item);
-  }));
-  const startAtFn = (condition?.offset && condition?.limit && condition.limit > 1) ? startAt(condition.offset) : undefined;
-  const limitFn = condition?.limit ? limit(condition.limit) : undefined;
-  const conditions = [...whereFns, ...orderFns, startAtFn, limitFn].filter(c => (c !== undefined));
+  const wheres = !condition?.where ? [] : condition.where.map((item) => fsWhere(item));
+  const orders = !condition?.order ? [] : condition.order.map((item) => fsOrder(item));
+  const pagination = fsPagination({page:condition?.page, length:condition?.length})
+  const conditions = [...wheres, ...orders, ...pagination].filter(c => (c !== undefined));
+  
   if(!conditions.length){
     return ref;
   }
@@ -79,7 +57,7 @@ export const getFSDocs = (q:QueryRequest) =>  async<C extends object>(
   converter?:DocConverter<C>
 ) => {
   const ref = converter ? q.withConverter(converter) : q;
-  return await firebaseHandler<FSError,QueryResponse>(getDocs,ref);
+  return await invoke<FSError,QueryResponse>(getDocs,ref);
 };
 
 export const getFSDocById = (app:FirebaseApp) => async<C extends object>(
@@ -89,7 +67,7 @@ export const getFSDocById = (app:FirebaseApp) => async<C extends object>(
 ) => {
   const db = getFirestore(app);
   const ref = converter ? doc(db,collectionId,docId).withConverter(converter) : doc(db,collectionId,docId);
-  return await firebaseHandler<FSError,DocResponse>(getDoc,ref);
+  return await invoke<FSError,DocResponse>(getDoc,ref);
 };
 
 export const addFSDoc = (app:FirebaseApp) => async<C extends object>(
@@ -99,7 +77,7 @@ export const addFSDoc = (app:FirebaseApp) => async<C extends object>(
 ) => {
   const db = getFirestore(app);
   const ref = converter ? collection(db,collectionId).withConverter(converter) : collection(db,collectionId);
-  return await firebaseHandler<FSError,DocResponse>(addDoc,ref,docData);
+  return await invoke<FSError,DocResponse>(addDoc,ref,docData);
 };
 
 export const setFSDocById = (app:FirebaseApp) => async<C extends object>(
@@ -110,7 +88,7 @@ export const setFSDocById = (app:FirebaseApp) => async<C extends object>(
 ) => {
   const db = getFirestore(app);
   const ref = converter ? doc(collection(db,collectionId),docId).withConverter(converter) : doc(collection(db,collectionId),docId);
-  return await firebaseHandler<FSError,DocResponse>(setDoc,ref,docData);
+  return await invoke<FSError,DocResponse>(setDoc,ref,docData);
 };
 
 export const deleteFSDocById = (app:FirebaseApp) => async(
@@ -119,5 +97,5 @@ export const deleteFSDocById = (app:FirebaseApp) => async(
 ) => {
   const db = getFirestore(app);
   const ref = doc(collection(db,collectionId),docId);
-  return await firebaseHandler<FSError,DocResponse>(deleteDoc,ref);  
+  return await invoke<FSError,DocResponse>(deleteDoc,ref);  
 };

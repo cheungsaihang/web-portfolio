@@ -2,7 +2,7 @@ import { type NextRequest } from "next/server"
 import { ApiResponse } from "@/utils/nextResponse"
 import { getAuthorizationHeader } from "@/utils/nextRequest"
 import { decrypt } from "@/utils/userTokens";
-import { prepareGetDoc } from "@/modules/server/firebase";
+import { db } from "@/modules/server/firebase";
 import { FS_UsersSchema } from "@/modules/server/firebase/schemas/users.schema";
 
 export async function GET(request:NextRequest){
@@ -15,8 +15,7 @@ export async function GET(request:NextRequest){
     return ApiResponse(505,{ short:'access_token_invalid', message: 'Access token is invalid'});
   }
   const userId = jwtResult.userId as string;
-  const getDocFn = prepareGetDoc('users',userId);
-  const doc = await getDocFn();
+  const doc = await db.getDoc('users',userId)();
   if(!doc){
     return ApiResponse(404,{ short:'user_not_found', message: 'Can not find user record'});
   }

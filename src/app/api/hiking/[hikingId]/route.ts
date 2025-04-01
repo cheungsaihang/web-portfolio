@@ -1,6 +1,6 @@
 import { type NextRequest } from "next/server"
 import { Zod_API_hikingDetailSchema } from "@/types/api/hiking";
-import { prepareGetDoc, prepareGetImageUrl } from "@/modules/server/firebase";
+import { db, storage } from "@/modules/server/firebase";
 import { DocResponse } from "@/modules/server/firebase/services/db";
 import { FS_HikingSchema } from "@/modules/server/firebase/schemas/hiking.schema";
 import { ApiResponse } from "@/utils/nextResponse";
@@ -9,12 +9,10 @@ type Params = {
   hikingId: string
 }
 const collectionId = 'hiking';
-const downloadImageFn = prepareGetImageUrl();
 
 export async function GET(request: NextRequest, context: { params: Promise<Params> } ) {
   const { hikingId } = await context.params;
-  const getDocFn = prepareGetDoc(collectionId,hikingId);
-  const result = await getDocFn();
+  const result = await db.getDoc(collectionId,hikingId)();
   if(result){
     const res = await convertResult(result);
     if(Zod_API_hikingDetailSchema.safeParse(res).success){
@@ -29,7 +27,7 @@ async function convertResult(doc:DocResponse){
   const data = doc.data() as FS_HikingSchema;
   const pics = !data?.pics 
                ? undefined
-               : await Promise.all(data.pics.map(async (pic) =>  await downloadImageFn({
+               : await Promise.all(data.pics.map(async (pic) =>  await storage.getImage({
                 docType:collectionId,
                 docId:id,
                 docPic:pic
@@ -42,6 +40,7 @@ async function convertResult(doc:DocResponse){
     map:data?.map,
     difficult: data?.difficult,
     tags:data?.tags,
+    order:data?.order,
     pics:pics
   }
 }

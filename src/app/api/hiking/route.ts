@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { Zod_API_hikingListSchema, API_HikingList } from "@/types/api/hiking";
-import { prepareQuery, prepareGetImageUrl } from "@/modules/server/firebase";
+import { db, FS_QueryCondition, storage } from "@/modules/server/firebase";
 import { QueryResponse } from "@/modules/server/firebase/services/db";
 import { getAllParams, getRequestPageNumber } from "@/utils/nextRequest";
 import { PAGINATION_LIMIT } from "@/constants";
@@ -9,25 +9,24 @@ import { ApiResponse } from "@/utils/nextResponse";
 import { API_Success } from "@/types/api";
 
 const collectionId = 'hiking';
-const downloadImageFn = prepareGetImageUrl();
 
 export async function GET(request:NextRequest) {
-  //Get Tags
-  const tags = await getTags();
   //Handle request params
+  const tags = await getTags();
   const [searchTags, page] = getAllParams(request)('tags','page');
-  const _limit = PAGINATION_LIMIT + 1;
-  const _page = getRequestPageNumber(page);
-  const _search = ( searchTags && tags.indexOf(searchTags) > 0 ) ? { tags:searchTags } : undefined;
+
   //Prepare Database query
-  const queryFn = prepareQuery(collectionId,{
-    search:_search,
-    page:_page,
-    order: ['order'], 
-    limit: _limit
-  });
+  const _page = getRequestPageNumber(page);
+  const _limit = PAGINATION_LIMIT + 1;
+  const condition: FS_QueryCondition = {
+    where: ( searchTags && tags.indexOf(searchTags) > 0 ) ? [{ condition:'array-contains', field:'tags', keyword:searchTags }] : undefined,
+    page: _page,
+    order: ['order'],
+    length: _limit
+  }
+  
   //Invoke
-  const result = await queryFn();
+  const result = await db.queryDocs(collectionId,condition)();
   if(!result){
     return ApiResponse(200,{
       tags:tags,
@@ -57,7 +56,7 @@ async function convertResult(res:QueryResponse){
     const data = doc.data() as FS_HikingSchema;
     const pic = !data?.pics 
                  ? undefined
-                 : await downloadImageFn({
+                 : await storage.getImage({
                     docType:collectionId,
                     docId:id,
                     docPic:data.pics[0]

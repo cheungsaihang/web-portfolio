@@ -22,7 +22,7 @@ const FBFail = <E,D=never>(e:E):FBResponse<E,D> => ({
 
 export const isFBSuccess = <E,D>(x:FBResponse<E,D>):x is FBSuccess<D> => x.success;
 
-export const firebaseHandler = async <E,D>(callFb:FBFunction, ...a:FBParameter):Promise<FBResponse<E,D>> => {
+export const invoke = async <E,D>(callFb:FBFunction, ...a:FBParameter):Promise<FBResponse<E,D>> => {
   const res = await callFb(...a).then((data) => {
       return FBSuccess(data);
     }).catch((error) => {

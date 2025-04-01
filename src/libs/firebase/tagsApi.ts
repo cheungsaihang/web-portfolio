@@ -1,10 +1,10 @@
 "use server"
-import { prepareGetDoc } from "@/modules/server/firebase";
-import { CollectionType } from "@/modules/server/firebase/util";
+import { db } from "@/modules/server/firebase";
+
+type CollectionType = 'hiking' | 'restaurant';
 
 export async function fetchTags(collectionId:CollectionType) {
-  const getDocFn = prepareGetDoc('tags',collectionId);
-  const doc = await getDocFn();
+  const doc = await db.getDoc('tags',collectionId)();
   if(doc){
     const data = doc.data() as { tags:string[] };
     if(data?.tags && data.tags.length){

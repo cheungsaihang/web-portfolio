@@ -1,33 +1,30 @@
-import { isFBSuccess } from './handler';
-import { getFSDocs, getFSDocById, getFSQuery, DocConverter, FsOrder, setFSDocById, addFSDoc, deleteFSDocById, fsWhere } from "@/modules/server/firebase/services/db";
-import { getImageUrl } from "@/modules/server/firebase/services/storage";
-import { prepareWhereCondition, WhereParams } from "./util";
-import { PAGINATION_LIMIT } from "@/constants";
+import { isFBSuccess } from './rpc';
+import { 
+  getFSDocs, 
+  getFSDocById, 
+  DocConverter, 
+  setFSDocById, 
+  addFSDoc, 
+  deleteFSDocById, 
+  prepareFSQuery,
+} from "@/modules/server/firebase/services/db";
+import { ArgImageUrl, getImageUrl } from "@/modules/server/firebase/services/storage";
 import firebaseApp from "@/modules/server/firebase/app";
+import { FS_OrderConditions, FS_WhereConditions } from './services/db/utils';
 
-export type QueryCondition = {
-  search?:WhereParams,
-  order?:FsOrder,
+export type FS_QueryCondition = {
+  where?:FS_WhereConditions[],
+  order?:FS_OrderConditions[],
   page?:number,
-  limit?:number
+  length?:number
 };
 
-export const prepareQuery = (
+const queryDocs = (
   collectionId:string,
-  condition?:QueryCondition
+  condition?:FS_QueryCondition
 ) => {
-  const where = prepareWhereCondition(condition?.search);
-  const _page = (condition?.page && condition.page > 0) ? (condition.page - 1) : 0;
-  const _offset = (_page * PAGINATION_LIMIT) + 1;
-  const _limit = condition?.limit ? condition.limit : PAGINATION_LIMIT;
-
-  const query = getFSQuery(firebaseApp)(collectionId, {
-    where:where,
-    order:condition?.order,
-    offset:_offset,
-    limit:_limit
-  });
-
+  const query = prepareFSQuery(firebaseApp)(collectionId, condition);
+  
   return async <C extends object>(converter?:DocConverter<C>) => {
     const res = await getFSDocs(query)(converter);
     if(!isFBSuccess(res) || res.data.empty){
@@ -37,23 +34,20 @@ export const prepareQuery = (
   }
 }
 
-export const prepareGetDoc = (
+const getDoc = (
   collectionId:string, 
   docId:string
 ) => {
   return async <C extends object>(converter?:DocConverter<C>) => {
     const res = await getFSDocById(firebaseApp)(collectionId,docId,converter);
-    if(!isFBSuccess(res)){
-      return null;
-    }
-    if(!res.data.exists()){
+    if(!isFBSuccess(res) || !res.data.exists()){
       return null;
     }
     return res.data;
   }
 }
 
-export const prepareAddDoc = (
+const addDoc = (
   collectionId:string, 
   docData:object,
 ) => {
@@ -63,7 +57,7 @@ export const prepareAddDoc = (
   }
 }
 
-export const prepareSetDoc = (
+const setDoc = (
   collectionId:string, 
   docId:string,
   docData:object,
@@ -74,7 +68,7 @@ export const prepareSetDoc = (
   }
 }
 
-export const prepareDeleteDocs = (
+export const deleteDocs = (
   collectionId:string,
   condition:{
     docId?:string,
@@ -91,13 +85,20 @@ export const prepareDeleteDocs = (
     }
   }
   if(condition.queries){
-    const where = Object.entries(condition.queries).map(query => {
+    const wheres = Object.entries(condition.queries).map(query => {
       const [ key, value ] = query;
-      return fsWhere.equal(key,value);
-    });
+      if(key != 'name' && key != 'tags'){
+        return undefined
+      }
+      return { condition:'equal', field:key, keyword:value } satisfies FS_WhereConditions
+    }).filter(item => item != undefined);
+
+    if(wheres.length <= 0){
+      return async () => [];
+    }
     return async () => {
-      const query = getFSQuery(firebaseApp)(collectionId, {
-        where:where      
+      const query = prepareFSQuery(firebaseApp)(collectionId, {
+        where:wheres   
       });
       const docsRes = await getFSDocs(query)();
       if(!isFBSuccess(docsRes) || docsRes.data.empty){
@@ -114,4 +115,18 @@ export const prepareDeleteDocs = (
   throw Error ('Delete docs function requires either docId or queries in condition object');
 }
 
-export const prepareGetImageUrl  = () => getImageUrl(firebaseApp);
+const getImage  = async (arg:ArgImageUrl) => {
+  return await getImageUrl(firebaseApp)(arg);
+}
+
+export const db = {
+  queryDocs: queryDocs,
+  getDoc: getDoc,
+  addDoc: addDoc,
+  setDoc: setDoc,
+  deleteDocs: deleteDocs,
+}
+
+export const storage = {
+  getImage: getImage
+}

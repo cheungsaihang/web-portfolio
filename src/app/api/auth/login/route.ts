@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server"
-import { prepareQuery, prepareAddDoc } from "@/modules/server/firebase";
+import { db } from "@/modules/server/firebase";
 import { FS_UsersSchema }  from "@/modules/server/firebase/schemas/users.schema";
 import bcrypt from 'bcrypt'
 import { generateUserTokens } from "@/utils/userTokens";
@@ -19,8 +19,10 @@ export async function POST(request: NextRequest) {
   }
   //Check user record whether it is existed
   const { email, password } = body;
-  const queryFn = prepareQuery('users',{ search: { email:email },  limit: 1 });
-  const result = await queryFn();
+  const result = await db.queryDocs('users', { 
+    where: [{ condition:'equal',field:'email',keyword:email}], 
+    length: 1,
+  })();
   if(!result){  
     return ApiResponse(404,{ short:'user_not_found', message: 'Can not user record'});
   }
@@ -33,14 +35,12 @@ export async function POST(request: NextRequest) {
   }
   //Generate bearer token and response login success
   const tokens = await generateUserTokens({userId:userId, email:email.charAt(0)});
-
-  const addDocFn = prepareAddDoc('refreshTokens',{
+  db.addDoc('refreshTokens',{
     userId:userId,
     accessToken:tokens.accessToken,
     refreshToken:tokens.refreshToken,
     expiresAt:tokens.refreshTokenExpire.getTime()
-  });
-  addDocFn();
+  })();
 
   return ApiResponse(200,{
       user:{

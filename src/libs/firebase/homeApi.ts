@@ -1,11 +1,10 @@
 "use server"
-import { prepareGetDoc } from "@/modules/server/firebase";
+import { db } from "@/modules/server/firebase";
 import { FS_Article_Home } from "@/types/api/home";
 
 export async function fetchHomeArticle(){
   // Fetch data from firestore
-  const getDocFn = prepareGetDoc('article','home');
-  const doc = await getDocFn();
+  const doc = await db.getDoc('article','home')();
   if(!doc){
     return null;
   }
