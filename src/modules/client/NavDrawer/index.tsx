@@ -52,8 +52,10 @@ export default function NavRrawer({ children }:{ children:ReactNode }){
   const closeMenu = () => setMenuOpen(false);
   const onMenuClick:MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
+    const lazyPaths = ['/restaurant','/hiking'];
     if(pathname != e.currentTarget.href){
-      if(['/restaurant','/hiking'].includes(e.currentTarget.href)){
+      const isLazy = lazyPaths.map((path) => e.currentTarget.href.indexOf(path) > -1).filter(result => result == true);
+      if(isLazy.length > 0){
         startTransition(()=>{
           router.push(e.currentTarget.href);
         });
@@ -63,6 +65,7 @@ export default function NavRrawer({ children }:{ children:ReactNode }){
       }
     }
     closeMenu();
+    return false;
   }
   return (
     <Layout>
