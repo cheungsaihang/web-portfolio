@@ -14,9 +14,9 @@ export const Zod_FS_hikingSchema = z.object({
 export type FS_HikingSchema = z.infer<typeof Zod_FS_hikingSchema>;
 
 //Where condition keys
-const searchable = Zod_FS_hikingSchema.pick({tags:true, name:true}).keyof();
-export type FS_HikingSearchableKeys = z.infer<typeof searchable>;
+// const searchable = Zod_FS_hikingSchema.pick({tags:true, name:true}).keyof();
+// export type FS_HikingSearchableKeys = z.infer<typeof searchable>;
 
 //Order condition keys
-const orderable = Zod_FS_hikingSchema.pick({order:true}).keyof();
-export type FS_HikingOrderableKeys = z.infer<typeof orderable>;
+// const orderable = Zod_FS_hikingSchema.pick({order:true}).keyof();
+// export type FS_HikingOrderableKeys = z.infer<typeof orderable>;

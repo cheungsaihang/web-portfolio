@@ -4,10 +4,6 @@ import {
   limit,
   startAt
 } from 'firebase/firestore';
-import { FS_HikingOrderableKeys, FS_HikingSearchableKeys } from '../../schemas/hiking.schema';
-import { FS_RestaurantOrderableKeys, FS_RestaurantSearchableKeys } from '../../schemas/restaurant.schema';
-
-type OrderableKeys = FS_HikingOrderableKeys | FS_RestaurantOrderableKeys
 
 //Where conditon
 export type FS_WhereConditions = {
@@ -15,7 +11,7 @@ export type FS_WhereConditions = {
   field: string;
   keyword: string;
 }
-export type FS_OrderConditions = OrderableKeys | [ OrderableKeys, 'asc' | 'desc' ];
+export type FS_OrderConditions = 'order' | [ 'order', 'asc' | 'desc' ];
 
 export const fsWhere = ({
   condition,
