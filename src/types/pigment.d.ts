@@ -31,11 +31,14 @@ declare module "@pigment-css/react/theme" {
       menuTagActive:string;
       button:string;
       buttonBlur:string;
+      buttonSecond:string;
+      buttonSecondBlur:string;
       errorText:string;
     };
     sizes:{
       fonts:{
         icon:string;
+        iconSmaller:string;
         gridTitle:string;
       },
       spacing:{

@@ -87,9 +87,6 @@ export const deleteDocs = (
   if(condition.queries){
     const wheres = Object.entries(condition.queries).map(query => {
       const [ key, value ] = query;
-      if(key != 'name' && key != 'tags'){
-        return undefined
-      }
       return { condition:'equal', field:key, keyword:value } satisfies FS_WhereConditions
     }).filter(item => item != undefined);
 

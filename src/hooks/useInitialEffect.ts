@@ -5,7 +5,7 @@ type InitialEffect<T> = {
   effectedData:T | null;
 }
 
-export default function useInitialEffect<T,P>(promiseFunction:(params?:P) => Promise<T>, params?:P){
+export default function useInitialEffect<T,P>(promiseFunction:(params:P) => Promise<T>, params:P){
   const [data, setData] = useState<InitialEffect<T>>({
     isEffected:false,
     effectedData:null

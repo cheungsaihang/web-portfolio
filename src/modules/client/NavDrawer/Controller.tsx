@@ -5,7 +5,7 @@ import ThemeSwitcher from "@/modules/client/ThemeSwitcher";
 import { SkeletionView } from "@/modules/client//Skeleton";
 
 export default function Controller({onClick}:{onClick?:() => void}){
-  const [isReady, decodedData] = useInitialEffect(decodeAccessToken);
+  const [isReady, decodedData] = useInitialEffect(decodeAccessToken,undefined);
   return (
     <>
       {

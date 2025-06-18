@@ -34,11 +34,14 @@ const pigmentConfig = {
       menuTagActive:'#111111',
       button:'#00a86b',
       buttonBlur:'#66d89b',
+      buttonSecond:'#4499ff',
+      buttonSecondBlur:'#999999',
       errorText:'#ff0000'
     },
     sizes:{
       fonts:{
         icon:'2.4rem',
+        iconSmaller:'2rem',
         gridTitle:'1.4rem',
       },
       spacing:{

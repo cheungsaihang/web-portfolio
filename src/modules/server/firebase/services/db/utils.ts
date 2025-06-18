@@ -2,14 +2,15 @@ import {
   where,
   orderBy,
   limit,
-  startAt
+  startAt,
+  documentId
 } from 'firebase/firestore';
 
 //Where conditon
 export type FS_WhereConditions = {
-  condition: "array-contains" | "equal";
-  field: string;
-  keyword: string;
+  condition: "array-contains" | "equal" | "in";
+  field: "id" | string;
+  keyword: string | string[];
 }
 export type FS_OrderConditions = 'order' | [ 'order', 'asc' | 'desc' ];
 
@@ -18,11 +19,24 @@ export const fsWhere = ({
   field,
   keyword
 }:FS_WhereConditions) => {
-  if(condition == 'array-contains'){
-    return where(field ,'array-contains',keyword);
+  const fieldPath = field == "id" ? documentId() : field;
+
+  if(Array.isArray(keyword)){
+    if(condition != 'in'){
+      throw Error("Firebase query error - only 'in' query can be used when keyword is array", { cause: "firebase" });
+    }
+    return where(fieldPath, 'in', keyword);
   }
   else{
-    return where(field ,'==',keyword);
+    if(condition == 'in'){
+      throw Error("Firebase query error - cannot use 'in' query when keyword is array", { cause: "firebase" });
+    }
+    if(condition == 'array-contains'){
+      return where(fieldPath ,'array-contains',keyword);
+    }
+    else{
+      return where(fieldPath ,'==',keyword);
+    }
   }
 }
 
