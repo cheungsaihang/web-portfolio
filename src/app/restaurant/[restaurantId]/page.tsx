@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import { API_RestaurantDetail } from "@/types/api/restaurant";
-import Content from "./content";
 import { WEBSITE_NAME } from '@/constants';
 import { isErrorResponse } from '@/utils/nextResponse';
 import { API_Error, API_Success } from '@/types/api';
+import { getProfile } from '@/services/authService';
+import Main from './ui/main';
+import { NoDataListing } from '@/modules/client/NoDataComponent';
 
 async function getRestaurantDetail(docId:string){
   const res = await fetch(process.env.API_ENDPOINT  + '/api/restaurant/' + docId, { cache: 'no-store' });
@@ -36,13 +38,14 @@ export async function generateMetadata({ params }: { params: Promise<{ restauran
 
 export default async function Page({ params }: { params: Promise<{ restaurantId: string }> }) {
   const { restaurantId } = await params;
+  const userProfile = await getProfile();  
   const detail = await getRestaurantDetail(restaurantId);  
   return (
     <>
         {
         !detail 
-        ? <div>Page not Found</div> 
-        : <Content detail={detail} />
+        ? <NoDataListing />
+        : <Main detail={detail} userProfile={userProfile} docId={restaurantId} />
         }
     </>
   );

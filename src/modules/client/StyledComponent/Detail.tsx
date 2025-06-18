@@ -5,6 +5,27 @@ export const Container = styled('article')({
   marginTop:'1rem'
 });
 
+export const TitleRow = styled('div')(({theme}) => ({
+  width:'calc(100% - 332px)',
+  display:'flex',
+  justifyContent:'space-between',
+  marginBottom:'1rem',
+  alignItems:'center',
+  paddingRight:30,
+  [`@media (max-width: ${theme.media.screenM})`]:{
+    width:'100%',
+    paddingRight:0 
+  }
+}));
+
+export const Row = styled('div')({
+  width:'100%',
+  display:'flex',
+  justifyContent:'space-between',
+  marginBottom:'1rem',
+  alignItems:'center',
+});
+
 export const Flex = styled('div')(({theme}) => ({
   width:'100%',
   display:'flex',
