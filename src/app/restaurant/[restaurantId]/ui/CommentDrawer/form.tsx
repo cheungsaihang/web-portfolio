@@ -1,24 +1,14 @@
-import { SetStateAction, useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import * as D from "@/modules/client/StyledComponent/Comment";
 import submitAddComment from "./actions";
 import CustomAvatar from "@/modules/client/CustomAvatar";
 import { useRouter } from "next/navigation";
 import { API_Comments } from "@/types/api/comments";
-import { API_UsersSchema } from "@/types/api/users";
+import { useCommentContext } from "./context";
 
-export default function CommentForm({
-  docId, 
-  type, 
-  userProfile,
-  setComments
-}:{
-  type:string;
-  docId:string;
-  setComments:(comments:SetStateAction<API_Comments[]>) => void;
-  userProfile?:API_UsersSchema | null;
-}){
-
+export default function CommentForm(){
+  const { type, docId, userProfile, setComments } = useCommentContext();
   const [state, addCommentAction] = useActionState(submitAddComment,undefined);
   const [inputText, setInputText] = useState("");
   const router = useRouter();
@@ -52,7 +42,7 @@ export default function CommentForm({
           </form>
         ) : (
           <D.CommentRow center>
-            <D.CommentLoginFirst onClick={() => router.push('/login')}>登入留言</D.CommentLoginFirst>
+            <D.CommentLoginFirst onClick={() => router.push(`/login?referer=/${type}/${docId}`)}>登入留言</D.CommentLoginFirst>
           </D.CommentRow>
         )
       }

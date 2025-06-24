@@ -1,13 +1,15 @@
 import { styled } from "@pigment-css/react";
 
-export const Container = styled('div')({
+export const Container = styled('div')(({theme}) => ({
   display:'flex',
-  alignItems:'center',
   justifyContent:'center',
-  marginTop:10
-});
+  marginTop:10,
+  [`@media (max-width: ${theme.media.screenS})`]:{
+    display:'block',
+  }
+}));
 
-export const Frame = styled('div')({
+export const Frame = styled('div')(({theme}) => ({
   borderWidth:1,
   borderColor:'#cccccc',
   borderStyle:'solid',
@@ -15,7 +17,11 @@ export const Frame = styled('div')({
   padding:10,
   maxWidth:480,
   width:'80%',
-});
+  margin:'0px 10px 0px 0px',
+  [`@media (max-width: ${theme.media.screenS})`]:{
+    margin:'0px auto 10px',
+  }
+}));
 
 export const Form = styled('div')({
   padding:10,
@@ -69,3 +75,22 @@ export const Button = styled('button')(({theme}) => ({
     style: { backgroundColor: theme.colors.buttonBlur },
   }],
 }));
+
+export const Info = styled('div')(({theme}) => ({
+  padding:15,
+  margin:'0px 0px 0px 10px',
+  borderRadius:10,
+  backgroundColor:theme.colors.skeleton,
+  [`@media (max-width: ${theme.media.screenS})`]:{
+    width:'80%',
+    maxWidth:480,
+    margin:'0px auto',
+  }
+}));
+
+export const InfoText = styled('div')(({theme}) => ({
+  fontSize:'1.5rem',
+  marginBottom:5,
+  color:theme.colors.foreground
+}));
+

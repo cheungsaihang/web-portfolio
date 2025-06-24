@@ -6,6 +6,7 @@ import { getComments } from "@/services/commentService";
 import { Hobby } from "@/types";
 import { API_Comments } from "@/types/api/comments";
 import { API_UsersSchema } from "@/types/api/users";
+import { CommentContext } from "./context";
 
 export type CommentDrawerRef = {
   openDrawer: () => void;
@@ -46,13 +47,17 @@ export default function CommentDrawer({
 
   return (
     <RightDrawer stateOpen={open} stateSetOpen={setOpen} >
-      <CommentForm 
-        type={type}
-        docId={docId}
-        setComments={setComments}
-        userProfile={userProfile}
-      />
-      <CommentListing isReady={isReady} comments={comments} />
+      <CommentContext.Provider 
+        value={{
+          type,
+          docId,
+          userProfile,
+          setComments
+        }}
+      >
+        <CommentForm />
+        <CommentListing isReady={isReady} comments={comments} />
+      </CommentContext.Provider>
     </RightDrawer>
   );
 }

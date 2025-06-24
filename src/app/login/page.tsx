@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { login } from "./actions";
 import * as L from "@/modules/client/StyledComponent/Login";
+import { useSearchParams } from "next/navigation";
 
 const cssInput = css(({theme}) =>({
   fontSize:'1.5rem',
@@ -15,11 +16,13 @@ const cssInput = css(({theme}) =>({
 
 export default function Page() {
   const [state, loginAction] = useActionState(login,undefined);
+  const searchParams = useSearchParams();
+  const referer = searchParams.get('referer');
 
   if(state?.success){
     //To tiggle useEffect without any dependencies
     //Using hard redirect instead of redirect function in 'next/navigation'
-    window.location.href = '/';
+    window.location.href = referer ? referer : '/';
     return null;
   }
 
@@ -43,6 +46,11 @@ export default function Page() {
             </L.Form>
           </form>
         </L.Frame>
+        <L.Info>
+          <L.Field><L.InfoText>試玩帳戶：</L.InfoText></L.Field>
+          <L.InfoText>visitor@test.com</L.InfoText>
+          <L.InfoText>visitor123</L.InfoText>
+        </L.Info>
     </L.Container>
   );
 }

@@ -21,3 +21,5 @@ export type API_Error_Body = {
   short:string;
   message:string;
 }
+
+export type API_Response<T> = API_Success<T> | API_Error;

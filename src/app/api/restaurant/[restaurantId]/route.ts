@@ -13,7 +13,6 @@ const collectionId = 'restaurant';
 export async function GET(request: NextRequest, context: { params: Promise<Params> } ) {
   const { restaurantId } = await context.params;
   const result = await db.getDoc(collectionId,restaurantId)();
-  console.log("result",result?.id);
   if(result){
     const res = await convertResult(result);
     if(Zod_API_restaurantDetailSchema.safeParse(res).success){

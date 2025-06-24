@@ -52,7 +52,7 @@ export async function addComment(body:{
 export async function deleteComment(commentId:string){
   const [accessToken] = (await sessionCookies()).get();
   
-  const res = await fetch(`${process.env.API_ENDPOINT}/api/comments${commentId}`,{
+  const res = await fetch(`${process.env.API_ENDPOINT}/api/comments/${commentId}`,{
     method: 'DELETE',
     headers:{
       'Accept': 'application/json',

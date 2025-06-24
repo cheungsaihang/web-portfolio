@@ -53,7 +53,16 @@ const addDoc = (
 ) => {
   return async <C extends object>(converter?:DocConverter<C>) => {
     const res = await addFSDoc(firebaseApp)(collectionId,docData,converter);
-    return isFBSuccess(res);
+
+    if(isFBSuccess(res)){
+      return {
+        success:true,
+        docId:res.data.id
+      }
+    }
+    return {
+      success:false
+    };
   }
 }
 

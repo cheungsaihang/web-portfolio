@@ -48,6 +48,7 @@ export async function GET(request:NextRequest){
     const item = doc.data() as FS_CommentsSchema;
     return {
       ...item,
+      commentId:doc.id,
       userName:userProfile.get(item.userId)
     }
   });
@@ -95,7 +96,7 @@ export async function POST(request:NextRequest){
     comment:body.comment,
     createdAt:createdAt
   })();
-  if(!result){
+  if(!result?.success){
     return ApiResponse(500,{ short:'cannot_add_comment', message: 'Cannot add comment, Please contact admin to resolve problem.'});
   }
 
@@ -107,6 +108,7 @@ export async function POST(request:NextRequest){
     userId:userId,
     userName:userName,
     createdAt:createdAt,
+    commentId:result.docId,
     comment:body.comment,
     collectionDoc: body.docId,
     collectionType: body.type

@@ -46,6 +46,6 @@ export default function AccountIcon({email,onClick}:{email?:string,onClick?:() =
 }
 
 function Avatar({email}:{email:string}){
-  const first = email.charAt(0);
+  const first = email.charAt(0).toUpperCase();
   return (<AvatarCircle>{first}</AvatarCircle>);
 }

@@ -3,6 +3,7 @@ import { Zod_FS_commentsSchema } from "@/modules/server/firebase/schemas/comment
 
 //Api Response Schema
 export const Zod_API_CommentsSchema = Zod_FS_commentsSchema.extend({
+  commentId:z.string(),
   userName:z.string()
 });
 

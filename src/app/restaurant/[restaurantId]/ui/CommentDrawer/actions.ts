@@ -1,7 +1,7 @@
 "use server"
 import { z } from "zod";
 import { isErrorResponse } from "@/utils/nextResponse";
-import { addComment } from "@/services/commentService";
+import { addComment, deleteComment } from "@/services/commentService";
 import { isValidHobby } from "@/services/hobbyService";
 import { API_Comments } from "@/types/api/comments";
 import submitActionPipe from "@/pipes/submitAction.pipe";
@@ -28,10 +28,35 @@ export default async function submitAddComment(prevState:unknown, formData:FormD
   }
 }
 
+export async function submitDeleteAction(prevState:unknown, commentId:string){
+  try{
+
+    await (() => { return new Promise(resolve => setTimeout(resolve, 1000));})();
+
+    const apiOutput = await deleteComment(commentId);
+    if(isErrorResponse(apiOutput)){
+      throw Error("提交錯誤，請重新整理頁面",{ cause:"api" });
+    }
+    else{
+      return {
+        success:true,
+        commentId:commentId
+      }
+    }
+  }
+  catch(err){
+    const error = err as { cause:string, message:string };
+    return {
+      success:false,
+      error: error.message
+    }
+  }
+}
+
 function dto(formData:FormData){
 
   const Zod_CommentValidationSchema = z.object({
-    comment: z.string().min(1,{message: "留言內容不能為空"}).max(20,{message:"請輸入20字內"}),
+    comment: z.string().min(1,{message: "留言內容不能為空"}).max(40,{message:"請輸入40字內"}),
     type: z.string().min(1),
     docId: z.string().min(1)
   });

@@ -13,11 +13,15 @@ import {
   Query,
   setDoc,
   deleteDoc,
-  addDoc
+  addDoc,
+  DocumentReference
 } from 'firebase/firestore';
 import { FirebaseApp } from 'firebase/app';
 import { invoke } from '../../rpc';
 import { FS_OrderConditions, FS_WhereConditions, fsOrder, fsPagination, fsWhere } from './utils';
+
+
+
 export type DocResponse = DocumentSnapshot<DocumentData,DocumentData>;
 export type QueryRequest = Query<DocumentData, DocumentData>;
 export type QueryResponse = QuerySnapshot<unknown,DocumentData>;
@@ -77,7 +81,7 @@ export const addFSDoc = (app:FirebaseApp) => async<C extends object>(
 ) => {
   const db = getFirestore(app);
   const ref = converter ? collection(db,collectionId).withConverter(converter) : collection(db,collectionId);
-  return await invoke<FSError,DocResponse>(addDoc,ref,docData);
+  return await invoke<FSError,DocumentReference>(addDoc,ref,docData);
 };
 
 export const setFSDocById = (app:FirebaseApp) => async<C extends object>(
