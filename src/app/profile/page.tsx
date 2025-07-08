@@ -1,5 +1,5 @@
 import ProfileContent from "./content";
-import { sessionCookies } from "@/utils/sesstion";
+import { sessionCookies } from "@/utils/cookies";
 import { API_UsersSchema } from "@/types/api/users";
 import { API_Error, API_Success } from "@/types/api";
 import { isErrorResponse } from "@/utils/nextResponse";

@@ -3,7 +3,7 @@ import { API_Error, API_Success } from "@/types/api";
 import { API_LoginResult } from "@/types/api/users";
 import { isErrorResponse } from "@/utils/nextResponse";
 import { z } from "zod";
-import { sessionCookies } from "@/utils/sesstion";
+import { sessionCookies } from "@/utils/cookies";
 
 const Zod_LoginValidationSchema = z.object({
   email: z.string().email({message: "請輸入正確電郵"}).trim(),

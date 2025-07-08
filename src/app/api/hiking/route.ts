@@ -6,20 +6,20 @@ import { getAllParams, getRequestPageNumber } from "@/utils/nextRequest";
 import { PAGINATION_LIMIT } from "@/constants";
 import { FS_HikingSchema } from "@/modules/server/firebase/schemas/hiking.schema";
 import { ApiResponse } from "@/utils/nextResponse";
-import { API_Success } from "@/types/api";
+import { fetchTags } from "@/libs/firebase/tagsApi";
 
 const collectionId = 'hiking';
 
 export async function GET(request:NextRequest) {
   //Handle request params
-  const tags = await getTags();
+  const tags = await fetchTags(collectionId);
   const [searchTags, page] = getAllParams(request)('tags','page');
 
   //Prepare Database query
   const _page = getRequestPageNumber(page);
   const _limit = PAGINATION_LIMIT + 1;
   const condition: FS_QueryCondition = {
-    where: ( searchTags && tags.indexOf(searchTags) > 0 ) ? [{ condition:'array-contains', field:'tags', keyword:searchTags }] : undefined,
+    where: ( searchTags && tags && tags.indexOf(searchTags) > 0 ) ? [{ condition:'array-contains', field:'tags', keyword:searchTags }] : undefined,
     page: _page,
     order: ['order'],
     length: _limit
@@ -68,12 +68,4 @@ async function convertResult(res:QueryResponse){
     }
   }));
   return list.filter(doc => Zod_API_hikingListSchema.safeParse(doc).success) as API_HikingList[];
-}
-
-async function getTags(){
-  const res = await fetch(process.env.API_ENDPOINT  + '/api/tags/hiking',{ cache: 'no-store' });
-  const body = await res.json() as API_Success<string[]>;
-  const data =  body.result;
-  const tags = ['全部',...data];
-  return tags;
 }
