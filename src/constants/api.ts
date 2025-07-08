@@ -1,4 +1,5 @@
 export const API_URL = {
   hiking:'/api/hiking',
-  restaurant:'/api/restaurant'
+  restaurant:'/api/restaurant',
+  tags:'/api/tags'
 }
