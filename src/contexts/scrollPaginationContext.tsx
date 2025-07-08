@@ -2,7 +2,7 @@ import { createContext, ReactNode } from "react";
 import createExternalStore, { ExternalStore, Subscribe } from "@/hooks/createExternalStore";
 
 type Store<T> = {
-  list:T[];
+  list:T[] | null;
   page:number;
   isMorePage:boolean;
   isPending:boolean;
@@ -24,8 +24,8 @@ export default function createScrollPaginationContext<T>(){
   const Context = createContext<Context<T> | null>(null);
 
   const Provider = (props:{
-    initalList:T[];
-    initalMore:boolean;
+    initalList:T[] | null;
+    isMorePage:boolean;
     onEndReached:OnEndReached<T>;
     children:ReactNode;
   }) => {
@@ -35,7 +35,7 @@ export default function createScrollPaginationContext<T>(){
     const store = createExternalStore<Store<T>>({
       list:props.initalList,
       page:1,
-      isMorePage:props.initalMore,
+      isMorePage:props.isMorePage,
       isPending:false,
     },subscribe);
 
@@ -52,41 +52,61 @@ export default function createScrollPaginationContext<T>(){
 
 function scrollSubscribe<T>(onEndReached:OnEndReached<T>){
   const subscribe: Subscribe<Store<T>> = (getState,setState) => {
-    //Prepare functions
-    const isLoadAvailable = () => {
-      const currentState = getState();
-      return currentState.isMorePage && !currentState.isPending;
-    } 
-    const stateLoading = () => {
-      setState({ ...getState(),isPending:true });
-    }
-    const stateUpdate = (data:NextFetchData<T> | null) => {
-      const currentState = getState();
-      let newState = { ...currentState, isPending:false }
-      if(data){
-        newState = {list:[...currentState.list, ...data.newList], isPending:false, page:data.currentPage, isMorePage:data.haveMore}
-      }
-      setState(newState);
-    }
     //Add Window Scroll Listener
     window.addEventListener("scroll", () => {
-      const currentState = getState();
-      const nextPage= currentState.page + 1;
-
-      if(!isLoadAvailable() || !isEndReached()){
+      if(!isEndReached()){
         return ;
       }
-      //Loading state
-      stateLoading();
-      onEndReached(nextPage).then((data) => {
-        stateUpdate(data);
-      }); 
+      const controller = stateController(getState,setState);
+      if(controller.isLoadAvailable()){
+        //Do end reached process
+        controller.setLoading();
+        onEndReached(controller.getNextPage()).then((data) => {
+          controller.update(data);
+        }); 
+      }
     });
     return () => {
       window.removeEventListener('scroll', () => {});
     }
   }
   return subscribe;
+}
+
+
+function stateController<T>(
+  getState:() => Store<T>, 
+  setState:(state:Store<T>) => void
+){
+  const currentState = getState();
+
+  const isLoadAvailable = () => currentState.isMorePage && !currentState.isPending;
+
+  const setLoading = () => setState({ ...currentState, isPending:true });
+
+  const getNextPage = () => currentState.page + 1;
+  
+  const update = (data:NextFetchData<T> | null) => {
+    const latestState = getState();
+    if(!data){
+      setState({ ...latestState, isPending:false});
+      return ;
+    }
+    const newList = latestState.list ? latestState.list.concat(data.newList) : data.newList;
+    setState({
+      list:newList,
+      isPending:false, 
+      page:data.currentPage, 
+      isMorePage:data.haveMore
+    });    
+  }
+
+  return {
+    isLoadAvailable,
+    setLoading,
+    update,
+    getNextPage
+  }
 }
 
 function isEndReached(_threshold?:number){

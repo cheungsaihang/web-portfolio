@@ -1,5 +1,5 @@
 import { Hobby } from "@/types";
-import { API_Error, API_Response, API_Success } from "@/types/api";
+import { API_Response } from "@/types/api";
 import { API_CommentListResponse, API_Comments } from "@/types/api/comments";
 import { isServer } from "@/utils/common";
 import { isErrorResponse } from "@/utils/nextResponse";

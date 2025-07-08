@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { sessionCookies, sessionApi } from './utils/sesstion';
+import { sessionCookies } from './utils/cookies';
+import { refreshAccessToken, clearSessionTokens, validateAccessToken  } from './libs/frontend/api/auth';
  
 export default async function middleware(request: NextRequest) {
   const protectedRoutes = ['/profile'];
@@ -12,40 +13,54 @@ export default async function middleware(request: NextRequest) {
   const isPublicRoute = publicRoutes.includes(pathname);
   const isLogoutRoute = logoutRoutes.includes(pathname);
 
-  const session = await sessionCookies();
-  const [accessToken, refreshToken] = session.get();
-
   //Logout Route - cookies delete function must be in server action or middleware
   if(isLogoutRoute){
-    const response = NextResponse.redirect(new URL('/', request.nextUrl));
-    response.cookies.delete('sid');
-    response.cookies.delete('rsid');
-    if(accessToken && refreshToken){
-      await sessionApi(accessToken).clear(refreshToken);
-    }
-    return response;
+    return await doLogoutRoute(request);
   }
   //Protected Route - require authentication page
   if(isProtectedRoute){
-    if(!accessToken){
-      return NextResponse.redirect(new URL('/login', request.nextUrl));
-    }
-    const isSuccess = await sessionApi(accessToken).validate();
-    const newSessionTokens = !isSuccess && refreshToken && await sessionApi(accessToken).refresh(refreshToken);
-    if(!isSuccess){
-      if(!newSessionTokens){
-        const response = NextResponse.redirect(new URL('/login', request.nextUrl));
-        response.cookies.delete('sid');
-        response.cookies.delete('rsid');
-        return response;
-      }
-      //Refresh Tokens Success
-      const [newAccessTokens, newRefreshTokens] = newSessionTokens;
-      session.set(newAccessTokens,newRefreshTokens)
-    }
+    return await doProtectedRoute(request);
   }
   //Public Route - require logged out page
-  if(isPublicRoute && accessToken){
+  if(isPublicRoute){
+    return await doPublicRoute(request);
+  }
+  return NextResponse.next();
+}
+
+async function doLogoutRoute(request: NextRequest){
+  await clearSessionTokens();
+  const response = NextResponse.redirect(new URL('/', request.nextUrl));
+  response.cookies.delete('sid');
+  response.cookies.delete('rsid');
+  return response;
+}
+
+async function doProtectedRoute(request: NextRequest){
+  const session = await sessionCookies();
+  const [accessToken] = session.get();
+  if(!accessToken){
+    return NextResponse.redirect(new URL('/login', request.nextUrl));
+  }
+  const isSuccess = await validateAccessToken();
+  const newSessionTokens = !isSuccess && await refreshAccessToken();
+  if(!isSuccess){
+    if(!newSessionTokens){
+      const response = NextResponse.redirect(new URL('/login', request.nextUrl));
+      response.cookies.delete('sid');
+      response.cookies.delete('rsid');
+      return response;
+    }
+    //Refresh Tokens Success
+    const [newAccessTokens, newRefreshTokens] = newSessionTokens;
+    session.set(newAccessTokens,newRefreshTokens)
+  }
+  return NextResponse.next();
+}
+
+async function doPublicRoute(request: NextRequest){
+  const [accessToken] = (await sessionCookies()).get();
+  if(accessToken){
     return NextResponse.redirect(new URL('/', request.nextUrl));
   }
   return NextResponse.next();

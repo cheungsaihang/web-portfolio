@@ -1,26 +1,13 @@
 import type { Metadata } from 'next'
-import { API_RestaurantDetail } from "@/types/api/restaurant";
 import { WEBSITE_NAME } from '@/constants';
-import { isErrorResponse } from '@/utils/nextResponse';
-import { API_Error, API_Success } from '@/types/api';
-import { getProfile } from '@/services/authService';
-import Main from './ui/main';
+import Main from '@/modules/client/_app/restaurant/detail/main';
 import { NoDataListing } from '@/modules/client/NoDataComponent';
-
-async function getRestaurantDetail(docId:string){
-  const res = await fetch(process.env.API_ENDPOINT  + '/api/restaurant/' + docId, { cache: 'no-store' });
-  const body = await res.json() as API_Error | API_Success<API_RestaurantDetail>;
-  if(isErrorResponse(body)){
-    return null;
-  }
-  const data = body as API_Success<API_RestaurantDetail>;
-  return data.result;
-}
+import { getProfile } from '@/libs/frontend/api/auth';
+import { getRestaurant } from '@/libs/frontend/api/hobby/restaurant';
 
 export async function generateMetadata({ params }: { params: Promise<{ restaurantId: string }> }): Promise<Metadata> {
-  //Generate page metadata when build the app
   const { restaurantId } = await params;
-  const detail = await getRestaurantDetail(restaurantId); 
+  const detail = await getRestaurant(restaurantId); 
 
   if(!detail){
     return { title: `${WEBSITE_NAME}`, description: '' }
@@ -39,14 +26,14 @@ export async function generateMetadata({ params }: { params: Promise<{ restauran
 export default async function Page({ params }: { params: Promise<{ restaurantId: string }> }) {
   const { restaurantId } = await params;
   const userProfile = await getProfile();  
-  const detail = await getRestaurantDetail(restaurantId);  
+  const detail = await getRestaurant(restaurantId);  
   return (
     <>
-        {
+      {
         !detail 
         ? <NoDataListing />
         : <Main detail={detail} userProfile={userProfile} docId={restaurantId} />
-        }
+      }
     </>
   );
 }

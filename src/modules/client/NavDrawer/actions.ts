@@ -1,7 +1,7 @@
 "use server"
-import { API_Error, API_Success } from '@/types/api';
+import { API_Response } from '@/types/api';
 import { isErrorResponse } from '@/utils/nextResponse';
-import { sessionCookies } from '@/utils/sesstion';
+import { sessionCookies } from '@/utils/cookies';
 import { AccessTokenPayload } from '@/utils/userTokens';
 
 export async function decodeAccessToken(){
@@ -17,7 +17,7 @@ export async function decodeAccessToken(){
     },
     cache: 'no-store' 
   });
-  const body = await res.json() as API_Success<AccessTokenPayload> | API_Error;
+  const body = await res.json() as API_Response<AccessTokenPayload>;
   if(isErrorResponse(body)){
     return null;
   }
