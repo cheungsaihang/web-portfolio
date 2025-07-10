@@ -5,7 +5,15 @@ import { SearchParams } from "@/types";
 import { redirect } from "next/navigation";
 import { listTags } from "@/libs/frontend/api/tags";
 import Layout from "@/modules/client/_app/restaurant/list/layout";
-import Main from "@/modules/client/_app/restaurant/list/main";
+import dynamic from 'next/dynamic';
+import { ListingSkeletion } from "@/modules/client/_app/_components/PageSkeletion";
+
+const Main = dynamic(
+  () => import('@/modules/client/_app/restaurant/list/main'),
+  { 
+    loading: () => <ListingSkeletion />
+  }
+);
 
 export const metadata: Metadata = {
   title: `${WEBSITE_NAME} - 餐廳`,

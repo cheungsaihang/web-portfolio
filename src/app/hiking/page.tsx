@@ -5,7 +5,15 @@ import { SearchParams } from "@/types";
 import { redirect } from "next/navigation";
 import { listTags } from "@/libs/frontend/api/tags";
 import Layout from "@/modules/client/_app/hiking/list/layout";
-import Main from "@/modules/client/_app/hiking/list/main";
+import dynamic from 'next/dynamic';
+import { ListingSkeletion } from "@/modules/client/_app/_components/PageSkeletion";
+
+const Main = dynamic(
+  () => import('@/modules/client/_app/hiking/list/main'),
+  { 
+    loading: () => <ListingSkeletion />
+  }
+);
 
 export const metadata: Metadata = {
   title: `${WEBSITE_NAME} - 行山`,
@@ -25,7 +33,6 @@ export default async function Page({searchParams}:{searchParams:Promise<SearchPa
     </Layout>
   );
 }
-
 async function searchParamsPipe({
   tags,
   searchParams

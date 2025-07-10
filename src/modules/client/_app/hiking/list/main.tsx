@@ -1,28 +1,14 @@
-"use client"
-import { ScrollContextProvider } from "./useContext";
-import useInitialEffect from "@/hooks/useInitialEffect";
-import { ListingSkeletion } from "../../_components/PageSkeletion";
+"use server"
 import { listHikings } from "@/libs/frontend/api/hobby/hiking";
-import ShowCaseHikings from "./showcase";
+import Container from "./container";
 
-export default function Main({
+export default async function Main({
   query,
 }:{
   query:string
 }) {
-  const [isInited, initalList] = useInitialEffect(listHikings,query);
-
-  if(!isInited){
-    return <ListingSkeletion />;
-  }
-
+  const hikings = await listHikings(query);
   return (
-    <ScrollContextProvider
-      query={query}
-      initalList={initalList?.list || []}
-      initalMore={initalList?.isMorePage || false}
-    >
-      <ShowCaseHikings />
-    </ScrollContextProvider>
-  );
+    <Container initalList={hikings} query={query} />
+  )
 }

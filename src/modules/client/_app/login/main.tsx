@@ -2,7 +2,7 @@
 import { css } from "@pigment-css/react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { login } from "../actions";
+import { loginAction } from "./actions";
 import * as L from "@/modules/client/StyledComponent/Login";
 
 const cssInput = css(({theme}) =>({
@@ -18,7 +18,7 @@ export default function Main({
 }:{
   referer?:string | null
 }) {
-  const [state, loginAction] = useActionState(login,undefined);
+  const [state, login] = useActionState(loginAction,undefined);
 
   if(state?.success){
     //To tiggle useEffect without any dependencies
@@ -30,7 +30,7 @@ export default function Main({
   return ( 
     <L.Container>
         <L.Frame>
-          <form action={loginAction}>
+          <form action={login}>
             <L.Form>
                 <L.Field>
                   <L.Label>電郵</L.Label>

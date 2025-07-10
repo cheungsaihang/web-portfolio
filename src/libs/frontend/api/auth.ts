@@ -1,16 +1,19 @@
 "use server"
 import { API_Response } from "@/types/api";
 import { API_RefreshTokens } from "@/types/api/refreshTokens";
-import { API_UsersSchema } from "@/types/api/users";
+import { API_LoginResult, API_UsersSchema } from "@/types/api/users";
 import { sessionCookies } from "@/utils/cookies";
 import { isErrorResponse } from "@/utils/nextResponse";
+
+const authUrl = `${process.env.API_ENDPOINT}/api/auth`;
+const profileUrl = `${process.env.API_ENDPOINT}/api/user`;
 
 export async function getProfile() {
   const [accessToken] = (await sessionCookies()).get();
   if(!accessToken){
     return null;
   }
-  const res = await fetch(process.env.API_ENDPOINT  + '/api/user', {
+  const res = await fetch(profileUrl, {
     method: 'GET',
     ...authOptions(accessToken)
   });
@@ -21,12 +24,31 @@ export async function getProfile() {
   return body.result;
 }
 
+export async function login({
+  email,
+  password
+}:{
+  email:string;
+  password:string;
+}){
+  const res = await fetch(`${authUrl}/login`,{
+    method: 'POST',
+    body: JSON.stringify({email,password}),
+    headers:{
+      'Accept': 'application/json',
+      'Content-Type':'application/json'
+    },
+    cache: 'no-store' 
+  });
+  return await res.json() as API_Response<API_LoginResult>;
+}
+
 export async function validateAccessToken(){
   const [accessToken] = (await sessionCookies()).get();
   if(!accessToken){
     return false;
   }
-  const res = await fetch(`${process.env.API_ENDPOINT}/api/auth/validate`,{
+  const res = await fetch(`${authUrl}/validate`,{
     ...authOptions(accessToken),
     method: 'GET',
   });
@@ -47,7 +69,7 @@ export async function refreshAccessToken(){
     return null;
   }
   const res = await fetch(
-    `${process.env.API_ENDPOINT}/api/auth/refreshToken/${refreshToken}`,{
+    `${authUrl}/refreshToken/${refreshToken}`,{
     ...authOptions(accessToken),
     method: 'GET',
   });
@@ -63,7 +85,7 @@ export async function clearSessionTokens(){
   if(!accessToken || !refreshToken){
     return null;
   }  
-  await fetch(`${process.env.API_ENDPOINT}/api/auth/refreshToken/${refreshToken}`,{
+  await fetch(`${authUrl}/refreshToken/${refreshToken}`,{
     ...authOptions(accessToken),
     method: 'DELETE'
   }); 
