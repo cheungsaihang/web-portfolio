@@ -1,14 +1,14 @@
 import { SkeletonAnimation, SkeletionView } from '@/modules/client/Skeleton';
 import DuplicateComponent from '@/modules/client/DuplicateComponent';
-import * as D from "@/modules/client/StyledComponent/Detail";
+import Styled from "@/modules/client/StyledComponent/Detail";
 
 export default function Loading() {
   return (
     <SkeletonAnimation>
-      <D.Container>
+      <Styled.Article>
         <SkeletionView width={100} rounded /><br />
-        <D.Flex>
-          <D.FlexMain>
+        <Styled.Flex>
+          <Styled.Main>
             <DuplicateComponent times={2}>
               <br />
               <SkeletionView rounded width={'70%'} />
@@ -17,9 +17,9 @@ export default function Loading() {
               <br />
               <SkeletionView width={'55%'} height={250} />
             </DuplicateComponent>
-          </D.FlexMain>
-        </D.Flex>
-      </D.Container>
+          </Styled.Main>
+        </Styled.Flex>
+      </Styled.Article>
     </SkeletonAnimation>
   );
 }

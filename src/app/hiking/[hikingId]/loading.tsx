@@ -1,27 +1,27 @@
 import { SkeletonAnimation, SkeletionView } from '@/modules/client/Skeleton';
 import DuplicateComponent from '@/modules/client/DuplicateComponent';
-import * as D from "@/modules/client/StyledComponent/Detail";
+import Styled from "@/modules/client/StyledComponent/Detail";
 
 export default function Loading() {
   return (
     <SkeletonAnimation>
-      <D.Container>
+      <Styled.Article>
         <SkeletionView width={100} rounded /><br />
-        <D.Flex>
-          <D.FlexMain>
+        <Styled.Flex>
+          <Styled.Main>
             <DuplicateComponent times={3}>
               <SkeletionView rounded /><br />
             </DuplicateComponent>
-          </D.FlexMain>
-          <D.FlexSide>
-            <D.PictureGrid>
+          </Styled.Main>
+          <Styled.Aside>
+            <Styled.PictureGrid>
               <DuplicateComponent times={4}>
-                <D.PictureWrap><SkeletionView width={'100%'} height={'100%'} /></D.PictureWrap>
+                <Styled.PictureWrap><SkeletionView width={'100%'} height={'100%'} /></Styled.PictureWrap>
               </DuplicateComponent>
-            </D.PictureGrid>
-          </D.FlexSide>
-        </D.Flex>
-      </D.Container>
+            </Styled.PictureGrid>
+          </Styled.Aside>
+        </Styled.Flex>
+      </Styled.Article>
     </SkeletonAnimation>
   );
 }

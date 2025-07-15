@@ -26,11 +26,16 @@ const commentIcon = css(({theme}) => ({
   fontSize:`${theme.sizes.fonts.iconSmaller} !important`,
 }));
 
+const mt_s = css({
+  marginTop:10
+});
+
 const className = {
   foodImage,
   iframe,
   starIcon,
-  commentIcon
+  commentIcon,
+  mt_s
 };
 
 export default className;

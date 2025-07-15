@@ -1,29 +1,9 @@
-import ProfileContent from "./content";
-import { sessionCookies } from "@/utils/cookies";
-import { API_UsersSchema } from "@/types/api/users";
-import { API_Error, API_Success } from "@/types/api";
-import { isErrorResponse } from "@/utils/nextResponse";
+import Main from "@/modules/client/_app/profile/main";
+import { getProfile } from "@/libs/frontend/api/auth";
 
 export default async function Page() {
-  const [accessToken] = (await sessionCookies()).get();
-  const authUser = accessToken ? await getUser(accessToken) : null;
+  const authUser = await getProfile();
   return ( 
-    <ProfileContent user={authUser} />
+    <Main user={authUser} />
   );
-}
-
-async function getUser(accessToken:string) {
-  const res = await fetch(process.env.API_ENDPOINT  + '/api/user', {
-    method: 'GET',
-    headers:{
-      'Content-Type':'application/json',
-      'Authorization':`Bearer ${accessToken}`
-    }, 
-    cache: 'no-store'
-  });
-  const body = await res.json() as API_Success<API_UsersSchema> | API_Error;
-  if(isErrorResponse(body)){
-    return null;
-  }
-  return body.result;
 }
