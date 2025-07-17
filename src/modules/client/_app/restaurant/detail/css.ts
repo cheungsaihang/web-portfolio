@@ -1,4 +1,5 @@
 import { css } from "@pigment-css/react";
+import { mt_s, starIcon } from "../../css";
 
 const foodImage = css(({theme}) => ({
   width:'100%',
@@ -16,19 +17,11 @@ const iframe = css({
   border:'2px solid #eeeeee',
   borderRadius:5
 });
-const starIcon = css({
-  marginLeft:-5,
-  marginRight:5
-});
 
 const commentIcon = css(({theme}) => ({
   color:theme.colors.icon,
   fontSize:`${theme.sizes.fonts.iconSmaller} !important`,
 }));
-
-const mt_s = css({
-  marginTop:10
-});
 
 const className = {
   foodImage,

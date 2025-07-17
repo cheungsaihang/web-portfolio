@@ -7,6 +7,7 @@ import LazyImage from "@/modules/client/LazyImage";
 import DuplicateComponent from "@/modules/client/DuplicateComponent";
 import className from "./css";
 import { usePopupGallery } from "./usePopupGallery";
+import Grid from "@/modules/client/Grid";
 
 export default function Main({detail}:{detail:API_HikingDetail}){
   const {picState, wrapperControl, showPopup} = usePopupGallery();
@@ -22,7 +23,7 @@ export default function Main({detail}:{detail:API_HikingDetail}){
         </DuplicateComponent>
       </Styled.Flex>
 
-      <Styled.Flex>
+      <Styled.Flex responsive>
         <Styled.Main>
           {
             detail.reviews.map((review, index) => <Styled.P key={`review-${index}`} className={className.mt_s}>{review}</Styled.P>)
@@ -34,20 +35,20 @@ export default function Main({detail}:{detail:API_HikingDetail}){
           </div>
         </Styled.Main>
         <Styled.Aside>
-          <Styled.PictureGrid>
+          <Grid width={302} gap={2} cols={2}>
           {
             slicedPics.map((pic,index) => (
-              <Styled.PictureWrap key={`picture-${index}`} onClick={() => showPopup(index)}>
+              <Grid.Col key={`picture-${index}`} className={className.gridCol} onClick={() => showPopup(index)}>
                 <LazyImage src={pic} alt={detail.name} className={className.hikingImage} objectFit="cover"/>
                 {
                   (remainCount > 0 && index == 3) && (
                     <Styled.ShadowCover>+{remainCount}</Styled.ShadowCover>
                   )
                 }
-              </Styled.PictureWrap>
+              </Grid.Col>
             ))
           }
-          </Styled.PictureGrid>
+          </Grid>
         </Styled.Aside>
       </Styled.Flex>
       <div className={className.mt_s}>

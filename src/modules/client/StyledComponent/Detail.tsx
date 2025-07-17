@@ -17,26 +17,10 @@ const Tag = styled('span')(({theme}) => ({
   fontSize:'1.3rem'
 }));
 
-const PictureGrid = styled('div')({
-  display:'grid',
-  gridTemplateColumns:'auto auto',
-  gridColumnGap:2,
-  width:302,
-});
-
-const PictureWrap = styled('div')({
-  width:150,
-  height:150,
-  position:'relative',
-  marginTop:2
-});
-
 const Styled = {
   ...Common,
   Title,
-  Tag,
-  PictureGrid,
-  PictureWrap,
+  Tag
 };
 
 export default Styled

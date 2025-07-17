@@ -1,14 +1,12 @@
 import { css } from "@pigment-css/react";
+import { mt_s, mt_xl, starIcon } from '../../css';
 
 const hikingImage = css(({theme}) => ({
   width:'100%',
   height:'100%',
   backgroundColor: theme.vars.colors.skeleton
 }));
-const starIcon = css({
-  marginLeft:-5,
-  marginRight:5
-});
+
 const iframe = css({
   width:'100%',
   maxWidth:600,
@@ -21,11 +19,11 @@ const difficult = css(({theme}) => ({
   color:theme.vars.colors.foreground,
   paddingLeft:1
 }));
-const mt_s = css({
-  marginTop:10
-});
-const mt_xl = css({
-  marginTop:40
+const gridCol = css({
+  width:150,
+  height:150,
+  position:'relative',
+  marginBottom:2
 });
 
 const className = {
@@ -34,7 +32,8 @@ const className = {
   starIcon,
   difficult,
   mt_s,
-  mt_xl
+  mt_xl,
+  gridCol
 };
 
 export default className;

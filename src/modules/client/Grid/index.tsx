@@ -1,36 +1,39 @@
 import { FC, ReactNode } from 'react'
 import { styled } from '@pigment-css/react';
 
-interface GridProps{
+type CSSNumber = number | `${number}%`;
+
+interface GridCSS {
+  width:CSSNumber;
+  cols?:number;
+  gap?:CSSNumber;
+  responsive?:boolean;
+  className?:string;
+}
+interface GridProps extends GridCSS{
   children:ReactNode;
 }
 interface GridColProps{
   children:ReactNode;
+  onClick?:() => void;
+  className?:string;
 }
 interface GridComponent extends FC<GridProps> {  
   Col: FC<GridColProps>;  
 }
 
-const StyledCol = styled('div')({
-  borderRadius:10,
-  overflow:'hidden',
-  border:'1px solid rgba(0,0,0,.1)', 
-  borderBottom:'2px solid rgba(0,0,0,.2)',
-  marginBottom:15
-});
-const StyledContainer = styled('div')(({theme}) => ({
+const StyledContainer = styled('div')<GridCSS>(({theme}) => ({
   display:'grid',
-  gridTemplateColumns:'32% 32% 32%',
-  gridColumnGap:'2%',
-  marginTop:10,
-  width:'100%',
+  gridTemplateColumns:({cols}) => cols == 3 ? '1fr 1fr 1fr' : '1fr 1fr',
+  gridColumnGap:({gap}) => gap,
+  width:({width}) => width,
   [`@media (max-width: ${theme.media.screenXS})`]:{
-    gridTemplateColumns:'49% 49%',
+    gridTemplateColumns:({responsive, cols}) => cols == 3 && !responsive ? '1fr 1fr 1fr' : '1fr 1fr',
   }
 }));
 
-const Column:FC<GridColProps> = ({children}) => <StyledCol>{children}</StyledCol>
-const Grid:GridComponent = ({children}) => <StyledContainer>{children}</StyledContainer>
+const Column:FC<GridColProps> = (rest) => <div {...rest} />
+const Grid:GridComponent = (rest) => <StyledContainer {...rest} />
 Grid.Col = Column;
 
 export default Grid;

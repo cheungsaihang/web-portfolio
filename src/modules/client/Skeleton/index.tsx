@@ -1,6 +1,15 @@
 "use client"
 import { styled, keyframes } from '@pigment-css/react';
-import { ReactNode, CSSProperties } from 'react';
+import { ReactNode } from 'react';
+
+type CSSNumber = number | `${number}%`;
+
+type SkeletionProps = {
+  width?:CSSNumber;
+  height?:CSSNumber;
+  rounded?:boolean;
+  aspectRatio?:'1 / 1' | '4 / 3' | '3 / 4' | '16 / 9' | '9 / 16';
+}
 
 const animationEffect = keyframes`
   from {
@@ -13,7 +22,15 @@ const animationEffect = keyframes`
 const AnimationWrapper = styled('div')({
   animation: `${animationEffect} 1s ease-in-out infinite`,
   animationDirection:'alternate'
-})
+});
+
+const Skeleton = styled('div')<SkeletionProps>(({theme}) => ({
+  backgroundColor:theme.colors.skeleton,
+  aspectRatio:({aspectRatio}) => aspectRatio ? aspectRatio : undefined,
+  width:({width}) => width ? width : '75%',
+  height:({height, aspectRatio}) => aspectRatio ? undefined : ( height ? height : 14 ),
+  borderRadius:({rounded}) => rounded ? 20 : undefined,
+}));
 
 export function SkeletonAnimation({children}:{children:ReactNode}){
   return (
@@ -21,30 +38,8 @@ export function SkeletonAnimation({children}:{children:ReactNode}){
   );
 }
 
-export function SkeletionView({
-  width,
-  height,
-  rounded,
-  aspectRatio,
-  style,
-}:{
-  width?:number | string;
-  height?:number | string;
-  rounded?:boolean;
-  aspectRatio?:'1 / 1' | '4 / 3' | '3 / 4' | '16 / 9' | '9 / 16';
-  style?:CSSProperties;
+export function SkeletionView(rest:SkeletionProps & {
+  className?:string
 }){
-  const Skeleton = styled('div')(({theme}) => ({
-    backgroundColor:theme.colors.skeleton,
-  }));
-  const _width = width ? width : '75%';
-  const _height = height ? height : 14;
-  const _style = {
-    ...style,
-    aspectRatio: aspectRatio ? aspectRatio : undefined,
-    width: _width,
-    height: aspectRatio ? undefined : _height,
-    borderRadius: rounded ? 20 : undefined,
-  } as CSSProperties;
-  return <Skeleton style={_style}/>;
+  return <Skeleton {...rest} />;
 }
