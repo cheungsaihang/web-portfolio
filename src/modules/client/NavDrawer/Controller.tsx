@@ -3,6 +3,7 @@ import useInitialEffect from "@/hooks/useInitialEffect";
 import AccountIcon from "./AccountIcon";
 import ThemeSwitcher from "@/modules/client/ThemeSwitcher";
 import { SkeletionView } from "@/modules/client//Skeleton";
+import className from "./css";
 
 export default function Controller({onClick}:{onClick?:() => void}){
   const [isReady, decodedData] = useInitialEffect(decodeAccessToken,undefined);
@@ -16,8 +17,8 @@ export default function Controller({onClick}:{onClick?:() => void}){
           </>
         ) : (
           <>
-            <SkeletionView width={25} height={25} rounded style={{display:'inline-block',marginRight:10}} />
-            <SkeletionView width={25} height={25} rounded style={{display:'inline-block'}} />
+            <SkeletionView width={25} height={25} rounded className={`${className.inlineBlock} ${className.mr_s}`} />
+            <SkeletionView width={25} height={25} rounded className={className.mr_s} />
           </>
         )
       }

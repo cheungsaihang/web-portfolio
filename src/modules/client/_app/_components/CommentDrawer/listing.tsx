@@ -1,14 +1,10 @@
 import Comment from "@/modules/client/Comment";
 import { SkeletionView } from "@/modules/client/Skeleton";
-import { css } from "@pigment-css/react";
 import { API_Comments } from "@/types/api/comments";
 import { useCommentContext } from "./context";
 import { useActionState, useEffect } from "react";
 import { deleteCommentAction } from "./actions/deleteCommentAction";
-
-const cssSkeletionContainer = css({
-  padding:10
-});
+import className from "./css";
 
 export default function CommentListing({
   isReady,
@@ -35,8 +31,8 @@ export default function CommentListing({
     <>
       {
         !isReady ? (
-          <div className={cssSkeletionContainer}>
-            <SkeletionView width={50} style={{marginBottom:5}} />
+          <div className={className.skeletionContainer}>
+            <SkeletionView width={50} className={className.skeletionTitle} />
             <SkeletionView />
           </div>
         ) : (

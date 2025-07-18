@@ -1,11 +1,5 @@
 import { css } from "@pigment-css/react";
-
-export const mt_s = css({
-  marginTop:10
-});
-export const mt_xl = css({
-  marginTop:40
-});
+export * from "@/modules/client/PigmentCss";
 
 export const listItem = css({
   borderRadius:10,
