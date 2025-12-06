@@ -2,9 +2,14 @@ import { type NextRequest } from "next/server"
 import { ApiResponse } from "@/utils/nextResponse";
 import { fetchTags } from "@/libs/firebase/tagsApi";
 
+// type Params = {
+//   collectionId: 'hiking' | 'restaurant';
+// }
+
 type Params = {
-  collectionId: 'hiking' | 'restaurant';
+  collectionId: string;
 }
+
 //Return a list of `params` to populate the [collectionId] dynamic segment
 export async function generateStaticParams() {
   return [
