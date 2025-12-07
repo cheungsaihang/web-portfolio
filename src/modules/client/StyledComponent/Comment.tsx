@@ -1,5 +1,11 @@
 import { styled } from "@pigment-css/react";
 
+type CommentSubmitVar = {
+  children: string; 
+  type: "submit"; 
+  disabled: boolean;
+};
+
 export const CommentForm = styled('div')({
   padding:10,
 });
@@ -29,7 +35,7 @@ export const CommentInput = styled('input')(({theme}) => ({
   width:'100%'
 }));
 
-export const CommentSubmit = styled('button')(({theme}) => ({
+export const CommentSubmit = styled('button')<CommentSubmitVar>(({theme}) => ({
   backgroundColor:theme.colors.buttonSecond,
   borderWidth:0,
   borderRadius:10,
