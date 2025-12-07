@@ -1,3 +1,4 @@
+import { ButtonVariantsProps } from "@/types/styledComment";
 import { styled } from "@pigment-css/react";
 
 export const Container = styled('div')(({theme}) => ({
@@ -61,7 +62,7 @@ export const ButtonWrap = styled('div')({
   justifyContent:'center',
 });
 
-export const Button = styled('button')(({theme}) => ({
+export const Button = styled('button')<ButtonVariantsProps>(({theme}) => ({
   backgroundColor:theme.colors.button,
   borderWidth:0,
   borderRadius:5,
