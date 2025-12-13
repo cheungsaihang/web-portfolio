@@ -18,7 +18,7 @@
     "firebase": "^12.6.0",
     "firebase-admin": "^12.6.0",
     "jose": "^5.9.6",
-    "next": "^15.1.9",
+    "next": "15.5.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-zoom-pan-pinch": "^3.6.1",
