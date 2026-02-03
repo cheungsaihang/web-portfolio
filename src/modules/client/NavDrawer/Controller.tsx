@@ -1,19 +1,21 @@
-import { decodeAccessToken } from "./actions";
-import useInitialEffect from "@/hooks/useInitialEffect";
-import AccountIcon from "./AccountIcon";
+// import { decodeAccessToken } from "./actions";
+// import useInitialEffect from "@/hooks/useInitialEffect";
+// import AccountIcon from "./AccountIcon";
 import ThemeSwitcher from "@/modules/client/ThemeSwitcher";
 import { SkeletionView } from "@/modules/client//Skeleton";
 import className from "./css";
 
-export default function Controller({onClick}:{onClick?:() => void}){
-  const [isReady, decodedData] = useInitialEffect(decodeAccessToken,undefined);
+export default function Controller(){
+//export default function Controller({onClick}:{onClick?:() => void}){
+  // const [isReady, decodedData] = useInitialEffect(decodeAccessToken,undefined);
+  const isReady = true;
   return (
     <>
       {
         isReady ? (
           <>
             <ThemeSwitcher />
-            <AccountIcon email={decodedData?.email} onClick={onClick}/>
+            {/* <AccountIcon email={decodedData?.email} onClick={onClick}/> */}
           </>
         ) : (
           <>

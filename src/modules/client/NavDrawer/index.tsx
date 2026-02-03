@@ -1,5 +1,6 @@
 "use client"
-import { MouseEventHandler, ReactNode, useState, useTransition } from "react";
+//import { MouseEventHandler, ReactNode, useState, useTransition } from "react";
+import { ReactNode, useState } from "react";
 import { styled } from "@pigment-css/react";
 import Drawer from "./Drawer";
 import Main from "./Main";
@@ -7,7 +8,7 @@ import MenuSwitcher from './MenuSwitcher';
 import Image from "next/image";
 import Controller from "./Controller";
 import Loading from "@/app/hiking/loading";
-import { usePathname, useRouter } from "next/navigation";
+//import { usePathname, useRouter } from "next/navigation";
 
 const Layout = styled('div')(({theme})=> ({
   display:'flex',
@@ -45,37 +46,39 @@ const Shadow = styled('div')<{ show?: boolean }>({
 });
 
 export default function NavRrawer({ children }:{ children:ReactNode }){
-  const router = useRouter();
-  const pathname = usePathname();
+  // const router = useRouter();
+  // const pathname = usePathname();
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  // const [isPending, startTransition] = useTransition();
+  const isPending = false;
   const closeMenu = () => setMenuOpen(false);
-  const onMenuClick:MouseEventHandler<HTMLAnchorElement> = (e) => {
-    e.preventDefault();
-    const lazyPaths = ['/restaurant','/hiking'];
-    if(pathname != e.currentTarget.href){
-      const isLazy = lazyPaths.map((path) => e.currentTarget.href.indexOf(path) > -1).filter(result => result == true);
-      if(isLazy.length > 0){
-        startTransition(()=>{
-          router.push(e.currentTarget.href);
-        });
-      }
-      else{
-        router.push(e.currentTarget.href);
-      }
-    }
-    closeMenu();
-    return false;
-  }
+  // const onMenuClick:MouseEventHandler<HTMLAnchorElement> = (e) => {
+  //   e.preventDefault();
+  //   const lazyPaths = ['/restaurant','/hiking'];
+  //   if(pathname != e.currentTarget.href){
+  //     const isLazy = lazyPaths.map((path) => e.currentTarget.href.indexOf(path) > -1).filter(result => result == true);
+  //     if(isLazy.length > 0){
+  //       startTransition(()=>{
+  //         router.push(e.currentTarget.href);
+  //       });
+  //     }
+  //     else{
+  //       router.push(e.currentTarget.href);
+  //     }
+  //   }
+  //   closeMenu();
+  //   return false;
+  // }
   return (
     <Layout>
       <Shadow show={isMenuOpen} onClick={closeMenu}/>
       <Drawer open={isMenuOpen}>
         <Drawer.Header />
         <Drawer.List>
-          <Drawer.Item><a href="/" onClick={onMenuClick}>主頁</a></Drawer.Item>
+          {/* <Drawer.Item><a href="/" onClick={onMenuClick}>主頁</a></Drawer.Item>
           <Drawer.Item><a href="/restaurant" onClick={onMenuClick}>餐廳</a></Drawer.Item>
-          <Drawer.Item><a href="/hiking" onClick={onMenuClick}>行山</a></Drawer.Item>
+          <Drawer.Item><a href="/hiking" onClick={onMenuClick}>行山</a></Drawer.Item> */}
+          <Drawer.Item><a href="/" >主頁</a></Drawer.Item>
         </Drawer.List>
       </Drawer>
       <Main>
@@ -85,7 +88,8 @@ export default function NavRrawer({ children }:{ children:ReactNode }){
           </Wrap>
           <LogoContainer><Image src={'/images/logo.gif'} fill alt={'Logo'}/></LogoContainer>
           <Wrap>
-            <Controller onClick={closeMenu}/>
+            {/* <Controller onClick={closeMenu}/> */}
+            <Controller />
           </Wrap>
         </Main.Header>
         <Main.Body>{isPending ? <Loading /> : children}</Main.Body>
